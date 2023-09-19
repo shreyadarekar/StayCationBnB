@@ -2,7 +2,9 @@
 
 ## Database Schema Design
 
-![schema image](./docs/db/Schema.png)
+![db-schema]
+
+[db-schema]: ./images/schema.png
 
 ## API Documentation
 
