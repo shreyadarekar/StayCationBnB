@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === "production") {
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable(
-      "Users",
+      "Spots",
       {
         id: {
           allowNull: false,
@@ -17,27 +17,47 @@ module.exports = {
           primaryKey: true,
           type: Sequelize.INTEGER,
         },
-        firstName: {
+        ownerId: {
+          allowNull: false,
+          type: Sequelize.INTEGER,
+          references: { model: "Users" },
+          onDelete: "CASCADE",
+        },
+        address: {
+          allowNull: false,
           type: Sequelize.STRING(256),
-          allowNull: false,
         },
-        lastName: {
+        city: {
+          allowNull: false,
           type: Sequelize.STRING(256),
-          allowNull: false,
         },
-        email: {
+        state: {
+          allowNull: false,
           type: Sequelize.STRING(256),
-          allowNull: false,
-          unique: true,
         },
-        username: {
-          type: Sequelize.STRING(30),
+        country: {
           allowNull: false,
-          unique: true,
+          type: Sequelize.STRING(256),
         },
-        hashedPassword: {
-          type: Sequelize.STRING.BINARY,
+        lat: {
           allowNull: false,
+          type: Sequelize.DECIMAL,
+        },
+        lng: {
+          allowNull: false,
+          type: Sequelize.DECIMAL,
+        },
+        name: {
+          allowNull: false,
+          type: Sequelize.STRING(256),
+        },
+        description: {
+          allowNull: false,
+          type: Sequelize.STRING(256),
+        },
+        price: {
+          allowNull: false,
+          type: Sequelize.DECIMAL,
         },
         createdAt: {
           allowNull: false,
@@ -53,9 +73,8 @@ module.exports = {
       options
     );
   },
-
   async down(queryInterface, Sequelize) {
-    options.tableName = "Users";
-    return queryInterface.dropTable(options);
+    options.tableName = "Spots";
+    await queryInterface.dropTable(options);
   },
 };
