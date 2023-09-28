@@ -6,25 +6,14 @@ const router = express.Router();
 
 // Get all spots
 router.get("/", async (req, res) => {
-  // const allSpots = await Spot.findAll({
-  //   include: {
-  //     model: SpotImage,
-  //     where: { preview: true },
-  //     attributes: ["url"],
-  //   },
-  // });
-
-  const allSpots = await Spot.findAll();
-
-  for (let spot of allSpots) {
-    const spotImage = await spot.getSpotImages({
+  // ToDo: Add `previewImage` and `avgRating` to every spot
+  const allSpots = await Spot.findAll({
+    include: {
+      model: SpotImage,
       where: { preview: true },
-    });
-
-    // ToDo: Add `previewImage` and `avgRating` to every spot
-    const spotPreviewImage = spotImage ? spotImage.url : "";
-    spot.previewImage = spotPreviewImage;
-  }
+      attributes: [["url", "previewImage"]],
+    },
+  });
 
   res.json(allSpots);
 });
@@ -33,17 +22,15 @@ router.get("/", async (req, res) => {
 router.get("/current", requireAuth, async (req, res) => {
   const { user } = req;
 
-  const allSpots = await Spot.findAll({ where: { ownerId: user.id } });
-
-  for (let spot of allSpots) {
-    const spotImage = await spot.getSpotImages({
+  // ToDo: Add `previewImage` and `avgRating` to every spot
+  const allSpots = await Spot.findAll({
+    where: { ownerId: user.id },
+    include: {
+      model: SpotImage,
       where: { preview: true },
-    });
-
-    // ToDo: Add `previewImage` and `avgRating` to every spot
-    const spotPreviewImage = spotImage ? spotImage.url : "";
-    spot.previewImage = spotPreviewImage;
-  }
+      attributes: [["url", "previewImage"]],
+    },
+  });
 
   res.json(allSpots);
 });
