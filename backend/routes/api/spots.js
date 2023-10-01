@@ -151,7 +151,7 @@ router.get("/current", requireAuth, async (req, res) => {
 });
 
 // Get details of a spot from an id
-router.get("/:spotId", async (req, res, next) => {
+router.get("/:spotId", async (req, res) => {
   const spot = await Spot.findByPk(req.params.spotId, {
     include: [
       {
@@ -193,6 +193,43 @@ router.get("/:spotId", async (req, res, next) => {
   formattedSpot.Owner = Owner;
 
   res.json(formattedSpot);
+});
+
+// Edit a Spot
+router.put("/:spotId", [requireAuth, ...validateSpot], async (req, res) => {
+  const { user } = req;
+  const spotDetails = req.body;
+  const spot = await Spot.findByPk(req.params.spotId);
+
+  if (!spot) {
+    res.status(404).json({ message: "Spot couldn't be found" });
+  }
+
+  if (spot.ownerId !== user.id) {
+    res.status(404).json({ message: "Spot must belong to the current user" });
+  }
+
+  const newSpot = await spot.update(spotDetails);
+
+  res.json(newSpot);
+});
+
+// Delete a Spot
+router.delete("/:spotId", requireAuth, async (req, res) => {
+  const { user } = req;
+  const spot = await Spot.findByPk(req.params.spotId);
+
+  if (!spot) {
+    res.status(404).json({ message: "Spot couldn't be found" });
+  }
+
+  if (spot.ownerId !== user.id) {
+    res.status(404).json({ message: "Spot must belong to the current user" });
+  }
+
+  await spot.destroy();
+
+  res.json({ message: "Successfully deleted" });
 });
 
 module.exports = router;
