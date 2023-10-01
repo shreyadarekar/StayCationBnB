@@ -1,8 +1,41 @@
 const express = require("express");
 const { Spot, SpotImage, Review, User } = require("../../db/models");
 const { requireAuth } = require("../../utils/auth");
+const { check } = require("express-validator");
+const { handleValidationErrors } = require("../../utils/validation");
 
 const router = express.Router();
+
+const validateSpot = [
+  check("address")
+    .exists({ checkFalsy: true })
+    .withMessage("Street address is required"),
+  check("city").exists({ checkFalsy: true }).withMessage("City is required"),
+  check("state").exists({ checkFalsy: true }).withMessage("State is required"),
+  check("country")
+    .exists({ checkFalsy: true })
+    .withMessage("Country is required"),
+  // ToDo: Custom validation error message not working with `isLength` function
+  check("lat")
+    .exists({ checkFalsy: true })
+    .isLength({ min: -90, max: 90 })
+    .withMessage("Latitude is not valid"),
+  check("lng")
+    .exists({ checkFalsy: true })
+    .isLength({ min: -180, max: 180 })
+    .withMessage("Longitude is not valid"),
+  check("name")
+    .exists({ checkFalsy: true })
+    .isLength({ max: 50 })
+    .withMessage("Name must be less than 50 characters"),
+  check("description")
+    .exists({ checkFalsy: true })
+    .withMessage("Description is required"),
+  check("price")
+    .exists({ checkFalsy: true })
+    .withMessage("Price per day is required"),
+  handleValidationErrors,
+];
 
 // Get all spots
 router.get("/", async (req, res) => {
@@ -38,6 +71,15 @@ router.get("/", async (req, res) => {
   }, []);
 
   res.json({ Spots: formattedSpots });
+});
+
+router.post("/", [requireAuth, ...validateSpot], async (req, res) => {
+  const { user } = req;
+  const spotDetails = req.body;
+
+  const newSpot = await Spot.create({ ownerId: user.id, ...spotDetails });
+
+  res.status(201).json(newSpot);
 });
 
 // Get all spots for current user
