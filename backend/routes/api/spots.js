@@ -80,7 +80,7 @@ router.get("/current", requireAuth, async (req, res) => {
 });
 
 // Get details of a spot from an id
-router.get("/:spotId", async (req, res) => {
+router.get("/:spotId", async (req, res, next) => {
   const spot = await Spot.findByPk(req.params.spotId, {
     include: [
       {
@@ -97,6 +97,11 @@ router.get("/:spotId", async (req, res) => {
       },
     ],
   });
+
+  if (!spot) {
+    res.status(404);
+    return res.json({ message: "Spot couldn't be found" });
+  }
 
   const { Reviews, User: Owner, ...spotDetails } = spot.toJSON();
   const formattedSpot = {
