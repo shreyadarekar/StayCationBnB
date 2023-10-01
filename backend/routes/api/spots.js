@@ -6,7 +6,7 @@ const router = express.Router();
 
 // Get all spots
 router.get("/", async (req, res) => {
-  // ToDo: Add `previewImage` and `avgRating` to every spot
+  // ToDo: Add `avgRating` to every spot
   const allSpots = await Spot.findAll({
     include: {
       model: SpotImage,
@@ -15,14 +15,24 @@ router.get("/", async (req, res) => {
     },
   });
 
-  res.json(allSpots);
+  const formattedSpots = allSpots.reduce((acc, spot) => {
+    const { SpotImages, ...spotDetails } = spot.toJSON();
+    const formattedSpot = { ...spotDetails, previewImage: "" };
+    if (SpotImages.length)
+      formattedSpot.previewImage = SpotImages[0].previewImage;
+
+    acc.push(formattedSpot);
+    return acc;
+  }, []);
+
+  res.json(formattedSpots);
 });
 
 // Get all spots for current user
 router.get("/current", requireAuth, async (req, res) => {
   const { user } = req;
 
-  // ToDo: Add `previewImage` and `avgRating` to every spot
+  // ToDo: Add `avgRating` to every spot
   const allSpots = await Spot.findAll({
     where: { ownerId: user.id },
     include: {
@@ -32,7 +42,17 @@ router.get("/current", requireAuth, async (req, res) => {
     },
   });
 
-  res.json(allSpots);
+  const formattedSpots = allSpots.reduce((acc, spot) => {
+    const { SpotImages, ...spotDetails } = spot.toJSON();
+    const formattedSpot = { ...spotDetails, previewImage: "" };
+    if (SpotImages.length)
+      formattedSpot.previewImage = SpotImages[0].previewImage;
+
+    acc.push(formattedSpot);
+    return acc;
+  }, []);
+
+  res.json(formattedSpots);
 });
 
 module.exports = router;
