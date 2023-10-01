@@ -1,5 +1,5 @@
 const express = require("express");
-const { Spot, SpotImage, Review } = require("../../db/models");
+const { Spot, SpotImage, Review, User } = require("../../db/models");
 const { requireAuth } = require("../../utils/auth");
 
 const router = express.Router();
@@ -37,7 +37,7 @@ router.get("/", async (req, res) => {
     return acc;
   }, []);
 
-  res.json(formattedSpots);
+  res.json({ Spots: formattedSpots });
 });
 
 // Get all spots for current user
@@ -76,7 +76,47 @@ router.get("/current", requireAuth, async (req, res) => {
     return acc;
   }, []);
 
-  res.json(formattedSpots);
+  res.json({ Spots: formattedSpots });
+});
+
+// Get details of a spot from an id
+router.get("/:spotId", async (req, res) => {
+  const spot = await Spot.findByPk(req.params.spotId, {
+    include: [
+      {
+        model: SpotImage,
+        attributes: ["id", "url", "preview"],
+      },
+      {
+        model: Review,
+        attributes: ["stars"],
+      },
+      {
+        model: User,
+        attributes: ["id", "firstName", "lastName"],
+      },
+    ],
+  });
+
+  const { Reviews, User: Owner, ...spotDetails } = spot.toJSON();
+  const formattedSpot = {
+    ...spotDetails,
+    numReviews: Reviews.length,
+    avgStarRating: 0,
+  };
+
+  // set avgStarRating
+  if (Reviews.length) {
+    const sumStars = Reviews.reduce((sum, rev) => sum + rev.stars, 0);
+    formattedSpot.avgStarRating = Number(
+      (sumStars / Reviews.length).toFixed(1)
+    );
+  }
+
+  // set Owner
+  formattedSpot.Owner = Owner;
+
+  res.json(formattedSpot);
 });
 
 module.exports = router;
