@@ -1,5 +1,11 @@
 const express = require("express");
-const { Spot, SpotImage, Review, User } = require("../../db/models");
+const {
+  Spot,
+  SpotImage,
+  Review,
+  ReviewImage,
+  User,
+} = require("../../db/models");
 const { requireAuth } = require("../../utils/auth");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
@@ -91,11 +97,13 @@ router.post("/:spotId/images", requireAuth, async (req, res) => {
   const spot = await Spot.findByPk(req.params.spotId);
 
   if (!spot) {
-    res.status(404).json({ message: "Spot couldn't be found" });
+    return res.status(404).json({ message: "Spot couldn't be found" });
   }
 
   if (spot.ownerId !== user.id) {
-    res.status(404).json({ message: "Spot must belong to the current user" });
+    return res
+      .status(404)
+      .json({ message: "Spot must belong to the current user" });
   }
 
   const newSpotImage = await SpotImage.create({
@@ -150,6 +158,30 @@ router.get("/current", requireAuth, async (req, res) => {
   res.json({ Spots: formattedSpots });
 });
 
+// Get all Reviews by a Spot's id
+router.get("/:spotId/reviews", async (req, res) => {
+  const spot = await Spot.findByPk(req.params.spotId);
+  if (!spot) {
+    return res.status(404).json({ message: "Spot couldn't be found" });
+  }
+
+  const reviews = await Review.findAll({
+    where: { spotId: req.params.spotId },
+    include: [
+      {
+        model: User,
+        attributes: ["id", "firstName", "lastName"],
+      },
+      {
+        model: ReviewImage,
+        attributes: ["id", "url"],
+      },
+    ],
+  });
+
+  res.json({ Reviews: reviews });
+});
+
 // Get details of a spot from an id
 router.get("/:spotId", async (req, res) => {
   const spot = await Spot.findByPk(req.params.spotId, {
@@ -170,8 +202,7 @@ router.get("/:spotId", async (req, res) => {
   });
 
   if (!spot) {
-    res.status(404);
-    return res.json({ message: "Spot couldn't be found" });
+    return res.status(404).json({ message: "Spot couldn't be found" });
   }
 
   const { Reviews, User: Owner, ...spotDetails } = spot.toJSON();
@@ -202,11 +233,13 @@ router.put("/:spotId", [requireAuth, ...validateSpot], async (req, res) => {
   const spot = await Spot.findByPk(req.params.spotId);
 
   if (!spot) {
-    res.status(404).json({ message: "Spot couldn't be found" });
+    return res.status(404).json({ message: "Spot couldn't be found" });
   }
 
   if (spot.ownerId !== user.id) {
-    res.status(404).json({ message: "Spot must belong to the current user" });
+    return res
+      .status(404)
+      .json({ message: "Spot must belong to the current user" });
   }
 
   const newSpot = await spot.update(spotDetails);
@@ -220,11 +253,13 @@ router.delete("/:spotId", requireAuth, async (req, res) => {
   const spot = await Spot.findByPk(req.params.spotId);
 
   if (!spot) {
-    res.status(404).json({ message: "Spot couldn't be found" });
+    return res.status(404).json({ message: "Spot couldn't be found" });
   }
 
   if (spot.ownerId !== user.id) {
-    res.status(404).json({ message: "Spot must belong to the current user" });
+    return res
+      .status(404)
+      .json({ message: "Spot must belong to the current user" });
   }
 
   await spot.destroy();
