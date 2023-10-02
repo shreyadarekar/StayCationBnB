@@ -60,13 +60,7 @@ module.exports = {
       const { username, images, ...spotDetails } = spot;
       const user = await User.findOne({ where: { username } });
 
-      const deletedSpot = await Spot.destroy({
-        where: { ownerId: user.id, ...spotDetails },
-      });
-
-      for (let image of images) {
-        SpotImage.destroy({ where: { spotId: deletedSpot.id, ...image } });
-      }
+      await Spot.destroy({ where: { ownerId: user.id, ...spotDetails } });
     }
   },
 };
