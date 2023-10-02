@@ -15,18 +15,17 @@ const validateSpot = [
   check("country")
     .exists({ checkFalsy: true })
     .withMessage("Country is required"),
-  // ToDo: Custom validation error message not working with `isLength` function
   check("lat")
     .exists({ checkFalsy: true })
-    .isLength({ min: -90, max: 90 })
+    .isFloat({ min: -90, max: 90 })
     .withMessage("Latitude is not valid"),
   check("lng")
     .exists({ checkFalsy: true })
-    .isLength({ min: -180, max: 180 })
+    .isFloat({ min: -180, max: 180 })
     .withMessage("Longitude is not valid"),
   check("name")
     .exists({ checkFalsy: true })
-    .isLength({ max: 50 })
+    .isLength({ min: 1, max: 50 })
     .withMessage("Name must be less than 50 characters"),
   check("description")
     .exists({ checkFalsy: true })
@@ -73,6 +72,7 @@ router.get("/", async (req, res) => {
   res.json({ Spots: formattedSpots });
 });
 
+// Create a spot
 router.post("/", [requireAuth, ...validateSpot], async (req, res) => {
   const { user } = req;
   const spotDetails = req.body;
