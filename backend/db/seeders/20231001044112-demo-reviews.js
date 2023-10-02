@@ -13,7 +13,7 @@ const reviews = [
     username: "FakeUser1",
     spotName: "Lakeside Cabin",
     review: "Nice place",
-    stars: 4.7,
+    stars: 3,
     images: [
       { url: "https://sposts/spot-1/review-1.png" },
       { url: "https://sposts/spot-1/review-2.png" },
@@ -30,7 +30,7 @@ const reviews = [
     username: "Demo-lition",
     spotName: "Lakeside Cabin",
     review: "cool place",
-    stars: 4.5,
+    stars: 3,
     images: [
       { url: "https://sposts/spot-1/review-4.png" },
       { url: "https://sposts/spot-1/review-5.png" },
@@ -41,7 +41,7 @@ const reviews = [
     username: "Demo-lition",
     spotName: "Condo in Las Vegas",
     review: "cool",
-    stars: 4.5,
+    stars: 4,
     images: [
       { url: "https://sposts/spot-1/review-7.png" },
       { url: "https://sposts/spot-1/review-8.png" },
