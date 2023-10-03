@@ -96,25 +96,31 @@ router.put(
       });
     }
 
-    const existingBookings = await Booking.findAll({
+    const existingStartDateBookings = await Booking.findAll({
       where: {
-        spotId: booking.spotId,
-        [Op.or]: {
-          startDate: { [Op.between]: [startDate, endDate] },
-          endDate: { [Op.between]: [startDate, endDate] },
-        },
+        spotId: spot.id,
+        startDate: { [Op.between]: [startDate, endDate] },
       },
     });
-
-    // console.log("existingBookings", existingBookings);
+    const existingEndDateBookings = await Booking.findAll({
+      where: {
+        spotId: spot.id,
+        endDate: { [Op.between]: [startDate, endDate] },
+      },
+    });
     // ToDo: startDate and endDate between existing booking
-    if (existingBookings.length) {
+    if (existingStartDateBookings.length || existingEndDateBookings.length) {
+      const errors = {};
+      if (existingStartDateBookings.length) {
+        errors.startDate = "Start date conflicts with an existing booking";
+      }
+      if (existingEndDateBookings.length) {
+        errors.endDate = "End date conflicts with an existing booking";
+      }
+
       return res.status(403).json({
         message: "Sorry, this spot is already booked for the specified dates",
-        errors: {
-          startDate: "Start date conflicts with an existing booking",
-          endDate: "End date conflicts with an existing booking",
-        },
+        errors,
       });
     }
 
