@@ -36,7 +36,7 @@ module.exports = {
       const user = await User.findOne({ where: { username } });
       const spot = await Spot.findOne({ where: { name: spotName } });
 
-      const newBooking = await Booking.create({
+      await Booking.create({
         userId: user.id,
         spotId: spot.id,
         startDate,
@@ -52,10 +52,12 @@ module.exports = {
       const spot = await Spot.findOne({ where: { name: spotName } });
 
       await Booking.destroy({
-        userId: user.id,
-        spotId: spot.id,
-        startDate,
-        endDate,
+        where: {
+          userId: user.id,
+          spotId: spot.id,
+          startDate,
+          endDate,
+        },
       });
     }
   },
