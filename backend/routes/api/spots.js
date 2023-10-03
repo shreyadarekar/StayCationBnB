@@ -14,6 +14,44 @@ const Op = require("sequelize").Op;
 
 const router = express.Router();
 
+const validateQueryParams = [
+  check("page")
+    .exists({ checkFalsy: true })
+    .isInt({ min: 1, max: 10 })
+    .default(1)
+    .withMessage("Page must be greater than or equal to 1"),
+  check("size")
+    .exists({ checkFalsy: true })
+    .isInt({ min: 1, max: 20 })
+    .default(20)
+    .withMessage("Size must be greater than or equal to 1"),
+  check("maxLat")
+    .optional()
+    .isFloat({ min: -90, max: 90 })
+    .withMessage("Maximum latitude is invalid"),
+  check("minLat")
+    .optional()
+    .isFloat({ min: -90, max: 90 })
+    .withMessage("Minimum latitude is invalid"),
+  check("minLng")
+    .optional()
+    .isFloat({ min: -180, max: 180 })
+    .withMessage("Minimum longitude is invalid"),
+  check("maxLng")
+    .optional()
+    .isFloat({ min: -180, max: 180 })
+    .withMessage("Maximum longitude is invalid"),
+  check("minPrice")
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage("Minimum price must be greater than or equal to 0"),
+  check("maxPrice")
+    .optional()
+    .isFloat({ min: 0 })
+    .withMessage("Maximum price must be greater than or equal to 0"),
+  handleValidationErrors,
+];
+
 const validateSpot = [
   check("address")
     .exists({ checkFalsy: true })
@@ -75,8 +113,20 @@ const validateBooking = [
 ];
 
 // Get all spots
-router.get("/", async (req, res) => {
+router.get("/", validateQueryParams, async (req, res) => {
+  const { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } =
+    req.query;
+
+  const where = {};
+  if (minLat) where.lat = { [Op.gte]: minLat };
+  if (maxLat) where.lat = { [Op.lte]: maxLat };
+  if (minLng) where.lng = { [Op.gte]: minLng };
+  if (maxLng) where.lng = { [Op.lte]: maxLng };
+  if (minPrice) where.price = { [Op.gte]: minPrice };
+  if (maxPrice) where.price = { [Op.lte]: maxPrice };
+
   const allSpots = await Spot.findAll({
+    where,
     include: [
       {
         model: SpotImage,
@@ -88,6 +138,8 @@ router.get("/", async (req, res) => {
         attributes: ["stars"],
       },
     ],
+    limit: size,
+    offset: size * (page - 1),
   });
 
   const formattedSpots = allSpots.reduce((acc, spot) => {
@@ -107,7 +159,7 @@ router.get("/", async (req, res) => {
     return acc;
   }, []);
 
-  res.json({ Spots: formattedSpots });
+  res.json({ Spots: formattedSpots, page, size });
 });
 
 // Create a spot
