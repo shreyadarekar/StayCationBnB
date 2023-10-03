@@ -12,6 +12,17 @@ const { handleValidationErrors } = require("../../utils/validation");
 
 const router = express.Router();
 
+const validateReview = [
+  check("review")
+    .exists({ checkFalsy: true })
+    .withMessage("Review text is required"),
+  check("stars")
+    .exists({ checkFalsy: true })
+    .isInt({ min: 1, max: 5 })
+    .withMessage("Stars must be an integer from 1 to 5"),
+  handleValidationErrors,
+];
+
 // Get all Reviews of the Current User
 router.get("/current", requireAuth, async (req, res) => {
   const { user } = req;
@@ -91,4 +102,26 @@ router.post("/:reviewId/images", requireAuth, async (req, res) => {
 
   res.json({ id: newReviewImage.id, url: newReviewImage.url });
 });
+
+// Edit a Review
+router.put("/:reviewId", [requireAuth, ...validateReview], async (req, res) => {
+  const { user } = req;
+  const reviewDetails = req.body;
+  const review = await Review.findByPk(req.params.reviewId);
+
+  if (!review) {
+    return res.status(404).json({ message: "Review couldn't be found" });
+  }
+
+  if (review.userId !== user.id) {
+    return res
+      .status(404)
+      .json({ message: "Review must belong to the current user" });
+  }
+
+  const updatedReview = await review.update(reviewDetails);
+
+  res.json(updatedReview);
+});
+
 module.exports = router;

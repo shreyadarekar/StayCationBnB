@@ -52,6 +52,7 @@ const validateReview = [
     .withMessage("Stars must be an integer from 1 to 5"),
   handleValidationErrors,
 ];
+
 // Get all spots
 router.get("/", async (req, res) => {
   const allSpots = await Spot.findAll({
