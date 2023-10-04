@@ -2,7 +2,6 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
-
 const { setTokenCookie, requireAuth } = require("../../utils/auth");
 const { User } = require("../../db/models");
 
@@ -12,17 +11,17 @@ const validateSignup = [
   check("email")
     .exists({ checkFalsy: true })
     .isEmail()
-    .withMessage("Please provide a valid email."),
+    .withMessage("Invalid email"),
   check("firstName")
     .exists({ checkFalsy: true })
-    .withMessage("Please provide a valid first name."),
+    .withMessage("First Name is required"),
   check("lastName")
     .exists({ checkFalsy: true })
-    .withMessage("Please provide a valid last name."),
+    .withMessage("Last Name is required"),
   check("username")
     .exists({ checkFalsy: true })
     .isLength({ min: 4 })
-    .withMessage("Please provide a username with at least 4 characters."),
+    .withMessage("Username is required"),
   check("username").not().isEmail().withMessage("Username cannot be an email."),
   check("password")
     .exists({ checkFalsy: true })
@@ -32,8 +31,27 @@ const validateSignup = [
 ];
 
 // Sign up
-router.post("/", validateSignup, async (req, res) => {
+router.post("/", validateSignup, async (req, res, next) => {
   const { firstName, lastName, email, password, username } = req.body;
+
+  const existingEmailUser = await User.findOne({ where: { email } });
+  if (existingEmailUser) {
+    const err = new Error("User already exists");
+    err.title = "User already exists with the specified email";
+    err.errors = { email: "User with that email already exists" };
+    err.status = 500;
+    return next(err);
+  }
+
+  const existingUsernameUser = await User.findOne({ where: { username } });
+  if (existingUsernameUser) {
+    const err = new Error("User already exists");
+    err.title = "User already exists with the specified username";
+    err.errors = { username: "User with that username already exists" };
+    err.status = 500;
+    return next(err);
+  }
+
   const hashedPassword = bcrypt.hashSync(password);
   const user = await User.create({
     firstName,

@@ -1,10 +1,12 @@
+# AirBnB Clone
+
 # `StayCationBnB`
 
 ## Database Schema Design
 
-![db-schema]
+![database-schema]
 
-[db-schema]: ./images/schema.png
+[database-schema]: ./images/schema.png
 
 ## API Documentation
 
@@ -51,7 +53,7 @@ correct role(s) or permission(s).
 
 Returns the information about the current user that is logged in.
 
-- Require Authentication: true
+- Require Authentication: false
 - Request
 
   - Method: GET
@@ -492,7 +494,7 @@ Create and return a new image for a spot specified by id.
 - Require proper authorization: Spot must belong to the current user
 - Request
 
-  - Method: PUT
+  - Method: POST
   - URL: /api/spots/:spotId/images
   - Headers:
     - Content-Type: application/json
@@ -1160,6 +1162,8 @@ Create and return a new booking from a spot specified by id.
 
   - Method: POST
   - URL: /api/spots/:spotId/bookings
+  - Headers:
+    - Content-Type: application/json
   - Body:
 
     ```json
@@ -1396,7 +1400,7 @@ Delete an existing image for a Spot.
 - Request
 
   - Method: DELETE
-  - URL: /api/spot-images/:imageId OR /api/spots/:spotId/images/:imageId
+  - URL: /api/spot-images/:imageId
   - Body: none
 
 - Successful Response
@@ -1434,7 +1438,7 @@ Delete an existing image for a Review.
 - Request
 
   - Method: DELETE
-  - URL: /api/review-images/:imageId OR /api/reviews/:reviewId/images/:imageId
+  - URL: /api/review-images/:imageId
   - Body: none
 
 - Successful Response
@@ -1471,7 +1475,7 @@ Return spots filtered by query parameters.
 - Request
 
   - Method: GET
-  - URL: /spots
+  - URL: /api/spots
   - Query Parameters
     - page: integer, minimum: 1, maximum: 10, default: 1
     - size: integer, minimum: 1, maximum: 20, default: 20
