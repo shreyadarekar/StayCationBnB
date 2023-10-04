@@ -87,32 +87,45 @@ router.put(
       });
     }
 
-    const existingStartDateBookings = await Booking.findAll({
-      where: {
-        spotId: booking.spotId,
-        startDate: { [Op.between]: [startDate, endDate] },
-      },
+    const allBookings = await Booking.findAll({
+      where: { spotId: booking.spotId, id: { [Op.ne]: booking.id } },
     });
-    const existingEndDateBookings = await Booking.findAll({
-      where: {
-        spotId: booking.spotId,
-        endDate: { [Op.between]: [startDate, endDate] },
-      },
-    });
-    // ToDo: startDate and endDate between existing booking
-    if (existingStartDateBookings.length || existingEndDateBookings.length) {
+    for (let bkg of allBookings) {
       const errors = {};
-      if (existingStartDateBookings.length) {
+
+      const { startDate: bkgStartDate, endDate: bkgEndDate } = bkg.toJSON();
+      const existingStartDate = new Date(bkgStartDate);
+      const existingEndDate = new Date(bkgEndDate);
+      const inputStartDate = new Date(startDate);
+      const inputEndDate = new Date(endDate);
+
+      if (
+        (inputStartDate >= existingStartDate &&
+          inputStartDate <= existingEndDate) ||
+        (inputStartDate < existingStartDate &&
+          inputEndDate > existingEndDate &&
+          existingStartDate >= inputStartDate &&
+          existingStartDate <= inputEndDate)
+      ) {
         errors.startDate = "Start date conflicts with an existing booking";
       }
-      if (existingEndDateBookings.length) {
+      if (
+        (inputEndDate >= existingStartDate &&
+          inputEndDate <= existingEndDate) ||
+        (inputStartDate < existingStartDate &&
+          inputEndDate > existingEndDate &&
+          existingEndDate >= inputStartDate &&
+          existingEndDate <= inputEndDate)
+      ) {
         errors.endDate = "End date conflicts with an existing booking";
       }
 
-      return res.status(403).json({
-        message: "Sorry, this spot is already booked for the specified dates",
-        errors,
-      });
+      if (errors.startDate || errors.endDate) {
+        return res.status(403).json({
+          message: "Sorry, this spot is already booked for the specified dates",
+          errors,
+        });
+      }
     }
 
     const updatedBooking = await booking.update({
