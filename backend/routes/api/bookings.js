@@ -1,9 +1,5 @@
 const express = require("express");
-const {
-  Spot,
-  SpotImage,
-  Booking,
-} = require("../../db/models");
+const { Spot, SpotImage, Booking } = require("../../db/models");
 const { requireAuth } = require("../../utils/auth");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
@@ -23,7 +19,7 @@ const validateBooking = [
     .toDate()
     .custom((startDate, { req }) => {
       if (startDate.getTime() >= req.body.endDate.getTime()) {
-        throw new Error("endDate cannot be on or before startDate");
+        throw new Error("endDate cannot come before startDate");
       }
       return true;
     }),
@@ -81,9 +77,7 @@ router.put(
     }
 
     if (booking.userId !== user.id) {
-      return res
-        .status(404)
-        .json({ message: "Booking must belong to the current user" });
+      return res.status(403).json({ message: "Forbidden" });
     }
 
     const currentDate = new Date();
@@ -95,13 +89,13 @@ router.put(
 
     const existingStartDateBookings = await Booking.findAll({
       where: {
-        spotId: spot.id,
+        spotId: booking.spotId,
         startDate: { [Op.between]: [startDate, endDate] },
       },
     });
     const existingEndDateBookings = await Booking.findAll({
       where: {
-        spotId: spot.id,
+        spotId: booking.spotId,
         endDate: { [Op.between]: [startDate, endDate] },
       },
     });
@@ -140,9 +134,7 @@ router.delete("/:bookingId", requireAuth, async (req, res) => {
   }
 
   if (booking.userId !== user.id) {
-    return res
-      .status(404)
-      .json({ message: "Booking must belong to the current user" });
+    return res.status(403).json({ message: "Forbidden" });
   }
 
   const currentDate = new Date();

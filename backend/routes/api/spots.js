@@ -16,14 +16,12 @@ const router = express.Router();
 
 const validateQueryParams = [
   check("page")
-    .exists({ checkFalsy: true })
-    .isInt({ min: 1, max: 10 })
     .default(1)
+    .isInt({ min: 1, max: 10 })
     .withMessage("Page must be greater than or equal to 1"),
   check("size")
-    .exists({ checkFalsy: true })
-    .isInt({ min: 1, max: 20 })
     .default(20)
+    .isInt({ min: 1, max: 20 })
     .withMessage("Size must be greater than or equal to 1"),
   check("maxLat")
     .optional()
@@ -78,6 +76,7 @@ const validateSpot = [
     .withMessage("Description is required"),
   check("price")
     .exists({ checkFalsy: true })
+    .isFloat({ min: 0 })
     .withMessage("Price per day is required"),
   handleValidationErrors,
 ];
@@ -117,6 +116,9 @@ router.get("/", validateQueryParams, async (req, res) => {
   const { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } =
     req.query;
 
+  const limit = size || 20;
+  const offset = limit * ((page || 1) - 1);
+
   const where = {};
   if (minLat) where.lat = { [Op.gte]: minLat };
   if (maxLat) where.lat = { [Op.lte]: maxLat };
@@ -138,8 +140,8 @@ router.get("/", validateQueryParams, async (req, res) => {
         attributes: ["stars"],
       },
     ],
-    limit: size,
-    offset: size * (page - 1),
+    limit,
+    offset,
   });
 
   const formattedSpots = allSpots.reduce((acc, spot) => {
@@ -159,7 +161,7 @@ router.get("/", validateQueryParams, async (req, res) => {
     return acc;
   }, []);
 
-  res.json({ Spots: formattedSpots, page, size });
+  res.json({ Spots: formattedSpots, page: page || 1, size: limit });
 });
 
 // Create a spot
@@ -185,9 +187,7 @@ router.post("/:spotId/images", requireAuth, async (req, res) => {
   }
 
   if (spot.ownerId !== user.id) {
-    return res
-      .status(404)
-      .json({ message: "Spot must belong to the current user" });
+    return res.status(403).json({ message: "Forbidden" });
   }
 
   const newSpotImage = await SpotImage.create({
@@ -286,9 +286,7 @@ router.post(
     }
 
     if (spot.ownerId === user.id) {
-      return res
-        .status(404)
-        .json({ message: "Spot must NOT belong to the current user" });
+      return res.status(403).json({ message: "Forbidden" });
     }
 
     const existingStartDateBookings = await Booking.findAll({
@@ -407,11 +405,12 @@ router.get("/:spotId", async (req, res) => {
     return res.status(404).json({ message: "Spot couldn't be found" });
   }
 
-  const { Reviews, User: Owner, ...spotDetails } = spot.toJSON();
+  const { Reviews, User: Owner, SpotImages, ...spotDetails } = spot.toJSON();
   const formattedSpot = {
     ...spotDetails,
     numReviews: Reviews.length,
     avgStarRating: 0,
+    SpotImages,
   };
 
   // set avgStarRating
@@ -439,9 +438,7 @@ router.put("/:spotId", [requireAuth, ...validateSpot], async (req, res) => {
   }
 
   if (spot.ownerId !== user.id) {
-    return res
-      .status(404)
-      .json({ message: "Spot must belong to the current user" });
+    return res.status(403).json({ message: "Forbidden" });
   }
 
   const newSpot = await spot.update(spotDetails);
@@ -459,9 +456,7 @@ router.delete("/:spotId", requireAuth, async (req, res) => {
   }
 
   if (spot.ownerId !== user.id) {
-    return res
-      .status(404)
-      .json({ message: "Spot must belong to the current user" });
+    return res.status(403).json({ message: "Forbidden" });
   }
 
   await spot.destroy();

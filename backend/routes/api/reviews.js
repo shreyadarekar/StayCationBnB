@@ -84,9 +84,7 @@ router.post("/:reviewId/images", requireAuth, async (req, res) => {
   }
 
   if (review.userId !== user.id) {
-    return res
-      .status(404)
-      .json({ message: "Review must belong to the current user" });
+    return res.status(403).json({ message: "Forbidden" });
   }
 
   if (review.ReviewImages.length >= 10) {
@@ -114,9 +112,7 @@ router.put("/:reviewId", [requireAuth, ...validateReview], async (req, res) => {
   }
 
   if (review.userId !== user.id) {
-    return res
-      .status(404)
-      .json({ message: "Review must belong to the current user" });
+    return res.status(403).json({ message: "Forbidden" });
   }
 
   const updatedReview = await review.update(reviewDetails);
@@ -134,9 +130,7 @@ router.delete("/:reviewId", requireAuth, async (req, res) => {
   }
 
   if (review.userId !== user.id) {
-    return res
-      .status(404)
-      .json({ message: "Review must belong to the current user" });
+    return res.status(403).json({ message: "Forbidden" });
   }
 
   await review.destroy();
