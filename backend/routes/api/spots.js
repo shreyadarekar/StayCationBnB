@@ -175,7 +175,7 @@ router.post("/", [requireAuth, ...validateSpot], async (req, res) => {
 });
 
 // Add an Image to a Spot based on the Spot's id
-router.post("/:spotId/images", requireAuth, async (req, res) => {
+router.post("/:spotId/images", requireAuth, async (req, res, next) => {
   const { user } = req;
   const { url, preview } = req.body;
   const isPreview = preview || false;
@@ -187,7 +187,11 @@ router.post("/:spotId/images", requireAuth, async (req, res) => {
   }
 
   if (spot.ownerId !== user.id) {
-    return res.status(403).json({ message: "Forbidden" });
+    const err = new Error("Forbidden");
+    err.title = "Require proper authorization";
+    err.errors = { message: "Forbidden" };
+    err.status = 403;
+    return next(err);
   }
 
   const newSpotImage = await SpotImage.create({
@@ -276,7 +280,7 @@ router.get("/:spotId/bookings", requireAuth, async (req, res) => {
 router.post(
   "/:spotId/bookings",
   [requireAuth, ...validateBooking],
-  async (req, res) => {
+  async (req, res, next) => {
     const { user } = req;
     const { startDate, endDate } = req.body;
     const spot = await Spot.findByPk(req.params.spotId);
@@ -286,7 +290,11 @@ router.post(
     }
 
     if (spot.ownerId === user.id) {
-      return res.status(403).json({ message: "Forbidden" });
+      const err = new Error("Forbidden");
+      err.title = "Require proper authorization";
+      err.errors = { message: "Forbidden" };
+      err.status = 403;
+      return next(err);
     }
 
     const allBookings = await Booking.findAll({ where: { spotId: spot.id } });
@@ -439,26 +447,34 @@ router.get("/:spotId", async (req, res) => {
 });
 
 // Edit a Spot
-router.put("/:spotId", [requireAuth, ...validateSpot], async (req, res) => {
-  const { user } = req;
-  const spotDetails = req.body;
-  const spot = await Spot.findByPk(req.params.spotId);
+router.put(
+  "/:spotId",
+  [requireAuth, ...validateSpot],
+  async (req, res, next) => {
+    const { user } = req;
+    const spotDetails = req.body;
+    const spot = await Spot.findByPk(req.params.spotId);
 
-  if (!spot) {
-    return res.status(404).json({ message: "Spot couldn't be found" });
+    if (!spot) {
+      return res.status(404).json({ message: "Spot couldn't be found" });
+    }
+
+    if (spot.ownerId !== user.id) {
+      const err = new Error("Forbidden");
+      err.title = "Require proper authorization";
+      err.errors = { message: "Forbidden" };
+      err.status = 403;
+      return next(err);
+    }
+
+    const newSpot = await spot.update(spotDetails);
+
+    res.json(newSpot);
   }
-
-  if (spot.ownerId !== user.id) {
-    return res.status(403).json({ message: "Forbidden" });
-  }
-
-  const newSpot = await spot.update(spotDetails);
-
-  res.json(newSpot);
-});
+);
 
 // Delete a Spot
-router.delete("/:spotId", requireAuth, async (req, res) => {
+router.delete("/:spotId", requireAuth, async (req, res, next) => {
   const { user } = req;
   const spot = await Spot.findByPk(req.params.spotId);
 
@@ -467,7 +483,11 @@ router.delete("/:spotId", requireAuth, async (req, res) => {
   }
 
   if (spot.ownerId !== user.id) {
-    return res.status(403).json({ message: "Forbidden" });
+    const err = new Error("Forbidden");
+    err.title = "Require proper authorization";
+    err.errors = { message: "Forbidden" };
+    err.status = 403;
+    return next(err);
   }
 
   await spot.destroy();

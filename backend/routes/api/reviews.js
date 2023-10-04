@@ -73,7 +73,7 @@ router.get("/current", requireAuth, async (req, res) => {
 });
 
 // Add an Image to a Review based on the Review's id
-router.post("/:reviewId/images", requireAuth, async (req, res) => {
+router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
   const { user } = req;
   const review = await Review.findByPk(req.params.reviewId, {
     include: ReviewImage,
@@ -84,7 +84,11 @@ router.post("/:reviewId/images", requireAuth, async (req, res) => {
   }
 
   if (review.userId !== user.id) {
-    return res.status(403).json({ message: "Forbidden" });
+    const err = new Error("Forbidden");
+    err.title = "Require proper authorization";
+    err.errors = { message: "Forbidden" };
+    err.status = 403;
+    return next(err);
   }
 
   if (review.ReviewImages.length >= 10) {
@@ -102,26 +106,34 @@ router.post("/:reviewId/images", requireAuth, async (req, res) => {
 });
 
 // Edit a Review
-router.put("/:reviewId", [requireAuth, ...validateReview], async (req, res) => {
-  const { user } = req;
-  const reviewDetails = req.body;
-  const review = await Review.findByPk(req.params.reviewId);
+router.put(
+  "/:reviewId",
+  [requireAuth, ...validateReview],
+  async (req, res, next) => {
+    const { user } = req;
+    const reviewDetails = req.body;
+    const review = await Review.findByPk(req.params.reviewId);
 
-  if (!review) {
-    return res.status(404).json({ message: "Review couldn't be found" });
+    if (!review) {
+      return res.status(404).json({ message: "Review couldn't be found" });
+    }
+
+    if (review.userId !== user.id) {
+      const err = new Error("Forbidden");
+      err.title = "Require proper authorization";
+      err.errors = { message: "Forbidden" };
+      err.status = 403;
+      return next(err);
+    }
+
+    const updatedReview = await review.update(reviewDetails);
+
+    res.json(updatedReview);
   }
-
-  if (review.userId !== user.id) {
-    return res.status(403).json({ message: "Forbidden" });
-  }
-
-  const updatedReview = await review.update(reviewDetails);
-
-  res.json(updatedReview);
-});
+);
 
 // Delete a Review
-router.delete("/:reviewId", requireAuth, async (req, res) => {
+router.delete("/:reviewId", requireAuth, async (req, res, next) => {
   const { user } = req;
   const review = await Review.findByPk(req.params.reviewId);
 
@@ -130,7 +142,11 @@ router.delete("/:reviewId", requireAuth, async (req, res) => {
   }
 
   if (review.userId !== user.id) {
-    return res.status(403).json({ message: "Forbidden" });
+    const err = new Error("Forbidden");
+    err.title = "Require proper authorization";
+    err.errors = { message: "Forbidden" };
+    err.status = 403;
+    return next(err);
   }
 
   await review.destroy();

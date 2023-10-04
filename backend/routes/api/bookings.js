@@ -67,7 +67,7 @@ router.get("/current", requireAuth, async (req, res) => {
 router.put(
   "/:bookingId",
   [requireAuth, ...validateBooking],
-  async (req, res) => {
+  async (req, res, next) => {
     const { user } = req;
     const { startDate, endDate } = req.body;
     const booking = await Booking.findByPk(req.params.bookingId);
@@ -77,7 +77,11 @@ router.put(
     }
 
     if (booking.userId !== user.id) {
-      return res.status(403).json({ message: "Forbidden" });
+      const err = new Error("Forbidden");
+      err.title = "Require proper authorization";
+      err.errors = { message: "Forbidden" };
+      err.status = 403;
+      return next(err);
     }
 
     const currentDate = new Date();
@@ -138,7 +142,7 @@ router.put(
 );
 
 // Delete a Booking
-router.delete("/:bookingId", requireAuth, async (req, res) => {
+router.delete("/:bookingId", requireAuth, async (req, res, next) => {
   const { user } = req;
   const booking = await Booking.findByPk(req.params.bookingId);
 
@@ -147,7 +151,11 @@ router.delete("/:bookingId", requireAuth, async (req, res) => {
   }
 
   if (booking.userId !== user.id) {
-    return res.status(403).json({ message: "Forbidden" });
+    const err = new Error("Forbidden");
+    err.title = "Require proper authorization";
+    err.errors = { message: "Forbidden" };
+    err.status = 403;
+    return next(err);
   }
 
   const currentDate = new Date();

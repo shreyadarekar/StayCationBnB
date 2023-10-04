@@ -5,7 +5,7 @@ const { requireAuth } = require("../../utils/auth");
 const router = express.Router();
 
 // Delete a Spot Image
-router.delete("/:imageId", requireAuth, async (req, res) => {
+router.delete("/:imageId", requireAuth, async (req, res, next) => {
   const { user } = req;
   const spotImage = await SpotImage.findByPk(req.params.imageId, {
     include: Spot,
@@ -16,7 +16,11 @@ router.delete("/:imageId", requireAuth, async (req, res) => {
   }
 
   if (spotImage.Spot.ownerId !== user.id) {
-    return res.status(403).json({ message: "Forbidden" });
+    const err = new Error("Forbidden");
+    err.title = "Require proper authorization";
+    err.errors = { message: "Forbidden" };
+    err.status = 403;
+    return next(err);
   }
 
   await spotImage.destroy();
