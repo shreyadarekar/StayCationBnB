@@ -73,7 +73,11 @@ router.put(
     const booking = await Booking.findByPk(req.params.bookingId);
 
     if (!booking) {
-      return res.status(404).json({ message: "Booking couldn't be found" });
+      const err = new Error("Booking couldn't be found");
+      err.title = "Couldn't find a Booking with the specified id";
+      err.errors = { message: "Booking couldn't be found" };
+      err.status = 404;
+      return next(err);
     }
 
     if (booking.userId !== user.id) {
@@ -86,9 +90,11 @@ router.put(
 
     const currentDate = new Date();
     if (Date.parse(endDate) <= currentDate) {
-      return res.status(403).json({
-        message: "Past bookings can't be modified",
-      });
+      const err = new Error("Past bookings can't be modified");
+      err.title = "Can't edit a booking that's past the end date";
+      err.errors = { message: "Past bookings can't be modified" };
+      err.status = 403;
+      return next(err);
     }
 
     const allBookings = await Booking.findAll({
@@ -125,10 +131,13 @@ router.put(
       }
 
       if (errors.startDate || errors.endDate) {
-        return res.status(403).json({
-          message: "Sorry, this spot is already booked for the specified dates",
-          errors,
-        });
+        const err = new Error(
+          "Sorry, this spot is already booked for the specified dates"
+        );
+        err.title = "Booking conflict";
+        err.errors = errors;
+        err.status = 403;
+        return next(err);
       }
     }
 
@@ -147,7 +156,11 @@ router.delete("/:bookingId", requireAuth, async (req, res, next) => {
   const booking = await Booking.findByPk(req.params.bookingId);
 
   if (!booking) {
-    return res.status(404).json({ message: "Booking couldn't be found" });
+    const err = new Error("Booking couldn't be found");
+    err.title = "Couldn't find a Booking with the specified id";
+    err.errors = { message: "Booking couldn't be found" };
+    err.status = 404;
+    return next(err);
   }
 
   if (booking.userId !== user.id) {
@@ -160,9 +173,13 @@ router.delete("/:bookingId", requireAuth, async (req, res, next) => {
 
   const currentDate = new Date();
   if (Date.parse(booking.startDate) <= currentDate) {
-    return res.status(403).json({
+    const err = new Error("Bookings that have been started can't be deleted");
+    err.title = "Bookings that have been started can't be deleted";
+    err.errors = {
       message: "Bookings that have been started can't be deleted",
-    });
+    };
+    err.status = 403;
+    return next(err);
   }
 
   await booking.destroy();

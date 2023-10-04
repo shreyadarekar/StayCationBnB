@@ -80,7 +80,11 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
   });
 
   if (!review) {
-    return res.status(404).json({ message: "Review couldn't be found" });
+    const err = new Error("Review couldn't be found");
+    err.title = "Couldn't find a Review with the specified id";
+    err.errors = { message: "Review couldn't be found" };
+    err.status = 404;
+    return next(err);
   }
 
   if (review.userId !== user.id) {
@@ -92,9 +96,16 @@ router.post("/:reviewId/images", requireAuth, async (req, res, next) => {
   }
 
   if (review.ReviewImages.length >= 10) {
-    return res.status(403).json({
+    const err = new Error(
+      "Maximum number of images for this resource was reached"
+    );
+    err.title =
+      "Cannot add any more images because there is a maximum of 10 images per resource";
+    err.errors = {
       message: "Maximum number of images for this resource was reached",
-    });
+    };
+    err.status = 403;
+    return next(err);
   }
 
   const newReviewImage = await ReviewImage.create({
@@ -115,7 +126,11 @@ router.put(
     const review = await Review.findByPk(req.params.reviewId);
 
     if (!review) {
-      return res.status(404).json({ message: "Review couldn't be found" });
+      const err = new Error("Review couldn't be found");
+      err.title = "Couldn't find a Review with the specified id";
+      err.errors = { message: "Review couldn't be found" };
+      err.status = 404;
+      return next(err);
     }
 
     if (review.userId !== user.id) {
@@ -138,7 +153,11 @@ router.delete("/:reviewId", requireAuth, async (req, res, next) => {
   const review = await Review.findByPk(req.params.reviewId);
 
   if (!review) {
-    return res.status(404).json({ message: "Review couldn't be found" });
+    const err = new Error("Review couldn't be found");
+    err.title = "Couldn't find a Review with the specified id";
+    err.errors = { message: "Review couldn't be found" };
+    err.status = 404;
+    return next(err);
   }
 
   if (review.userId !== user.id) {
