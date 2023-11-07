@@ -40,7 +40,9 @@ function LoginFormModal() {
               onChange={(e) => setCredential(e.target.value)}
               required
             />
+            {errors.password && <p>{errors.credential}</p>}
           </div>
+
           <div>
             <input
               className="form-input"
@@ -50,8 +52,11 @@ function LoginFormModal() {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+            {errors.password && <p>{errors.password}</p>}
           </div>
+
           {errors.credential && <p>{errors.credential}</p>}
+
           <div className="button-div">
             <button className="form-button" type="submit">
               Log In
