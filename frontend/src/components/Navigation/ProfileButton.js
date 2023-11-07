@@ -37,14 +37,15 @@ function ProfileButton({ user }) {
     closeMenu();
   };
 
-  const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
+  const dropdownClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
   return (
     <>
-      <button onClick={openMenu}>
-        <i className="fas fa-user-circle" />
+      <button className="menu-button" onClick={openMenu}>
+        <i className="fas fa-regular fa-bars fa-lg menu-button-icon" />
+        <i className="fas fa-user-circle fa-lg menu-button-icon" />
       </button>
-      <ul className={ulClassName} ref={ulRef}>
+      <div className={dropdownClassName} ref={ulRef}>
         {user ? (
           <>
             <li>{user.username}</li>
@@ -70,7 +71,7 @@ function ProfileButton({ user }) {
             />
           </>
         )}
-      </ul>
+      </div>
     </>
   );
 }
