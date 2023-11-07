@@ -26,29 +26,39 @@ function LoginFormModal() {
 
   return (
     <>
-      <h1>Log In</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Username or Email
-          <input
-            type="text"
-            value={credential}
-            onChange={(e) => setCredential(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        {errors.credential && <p>{errors.credential}</p>}
-        <button type="submit">Log In</button>
-      </form>
+      <div>
+        <h1 className="modal-header">Log In</h1>
+      </div>
+      <div className="form-div">
+        <form onSubmit={handleSubmit}>
+          <div>
+            <input
+              className="form-input"
+              type="text"
+              placeholder="Username or Email"
+              value={credential}
+              onChange={(e) => setCredential(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <input
+              className="form-input"
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          {errors.credential && <p>{errors.credential}</p>}
+          <div className="button-div">
+            <button className="form-button" type="submit">
+              Log In
+            </button>
+          </div>
+        </form>
+      </div>
     </>
   );
 }

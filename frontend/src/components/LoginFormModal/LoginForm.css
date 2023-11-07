@@ -1,0 +1,22 @@
+.form-div {
+  display: flex;
+  justify-content: center;
+}
+
+.form-input {
+  margin: 5px;
+  width: 300px;
+}
+
+.button-div {
+  display: flex;
+  justify-content: center;
+}
+
+.form-button {
+  border-radius: 4px;
+  font-size: 14px;
+  margin: 15px 5px;
+  width: 300px;
+  height: 30px;
+}
