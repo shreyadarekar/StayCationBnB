@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
 import { getSpots } from "../../store/spots";
-import Spot from "./Spot";
 import "./Spots.css";
 
 const Spots = () => {
@@ -16,7 +16,25 @@ const Spots = () => {
   return (
     <div className="spots-grid">
       {spots.map((spot) => (
-        <Spot key={spot.id} spot={spot} />
+        <NavLink
+          key={spot.id}
+          className="spot-div"
+          to={`/spots/${spot.id}`}
+          title={spot.name}
+        >
+          <div>
+            <img className="spot-image" src={spot.previewImage} alt="preview" />
+          </div>
+          <div className="spot-location-stars">
+            <div>
+              {spot.city}, {spot.state}
+            </div>
+            <div>
+              <i className="fa-solid fa-star"></i> {spot.avgRating}
+            </div>
+          </div>
+          <div>${spot.price} night</div>
+        </NavLink>
       ))}
     </div>
   );

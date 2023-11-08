@@ -1,6 +1,7 @@
 import { csrfFetch } from "./csrf";
 
 const STORE_SPOTS = "spots/storeSpots";
+const STORE_SPOT = "spots/storeSpot";
 
 const storeSpots = (spots) => {
   return {
@@ -9,10 +10,24 @@ const storeSpots = (spots) => {
   };
 };
 
+const storeSpot = (spot) => {
+  return {
+    type: STORE_SPOT,
+    spot,
+  };
+};
+
 export const getSpots = () => async (dispatch) => {
   const response = await csrfFetch("/api/spots");
   const data = await response.json();
   dispatch(storeSpots(data.Spots));
+  return response;
+};
+
+export const getSpot = (spotId) => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots/${spotId}`);
+  const data = await response.json();
+  dispatch(storeSpot(data));
   return response;
 };
 
@@ -26,6 +41,14 @@ const spotsReducer = (state = initialState, action) => {
       }, {});
       return { ...state, data: spots };
     }
+
+    case STORE_SPOT: {
+      return {
+        ...state,
+        data: { ...state.data, [action.spot.id]: action.spot },
+      };
+    }
+
     default:
       return state;
   }
