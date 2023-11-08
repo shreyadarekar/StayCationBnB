@@ -26,7 +26,7 @@
 .menu-button {
   /* border-radius: 40%; */
   border: none;
-  background-color: white;
+  background-color: #ffffff;
   cursor: pointer;
   padding: 10px;
   color: red;
@@ -43,6 +43,14 @@
   border: 2px solid;
   border-radius: 8px;
   background-color: aliceblue;
+}
+
+.logout-button {
+  border-radius: 4px;
+  font-size: 14px;
+  margin-top: 5px;
+  background-color: tomato;
+  cursor: pointer;
 }
 
 .menu-item {
