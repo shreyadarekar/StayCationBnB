@@ -11,10 +11,8 @@ function LoginFormModal() {
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setErrors({});
-    return dispatch(sessionActions.login({ credential, password }))
+  const loginUser = (credential, password) =>
+    dispatch(sessionActions.login({ credential, password }))
       .then(closeModal)
       .catch(async (res) => {
         const data = await res.json();
@@ -22,6 +20,11 @@ function LoginFormModal() {
           setErrors(data.errors);
         }
       });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setErrors({});
+    loginUser(credential, password);
   };
 
   return (
@@ -30,6 +33,8 @@ function LoginFormModal() {
         <h1 className="modal-header">Log In</h1>
       </div>
       <div className="form-div">
+        {errors.credential && <p>{errors.credential}</p>}
+
         <form onSubmit={handleSubmit}>
           <div>
             <input
@@ -40,7 +45,7 @@ function LoginFormModal() {
               onChange={(e) => setCredential(e.target.value)}
               required
             />
-            {errors.password && <p>{errors.credential}</p>}
+            {errors.credential && <p>{errors.credential}</p>}
           </div>
 
           <div>
@@ -55,14 +60,21 @@ function LoginFormModal() {
             {errors.password && <p>{errors.password}</p>}
           </div>
 
-          {errors.credential && <p>{errors.credential}</p>}
-
-          <div className="button-div">
-            <button className="form-button" type="submit">
+          <div className="login-button-div">
+            <button className="login-button" type="submit">
               Log In
             </button>
           </div>
         </form>
+
+        <div>
+          <button
+            className="demo-user-button"
+            onClick={() => loginUser("Demo-lition", "password")}
+          >
+            Demo User
+          </button>
+        </div>
       </div>
     </>
   );

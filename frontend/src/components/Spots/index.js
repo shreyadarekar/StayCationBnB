@@ -16,7 +16,7 @@ const Spots = () => {
   return (
     <div className="spots-grid">
       {spots.map((spot) => (
-        <Spot spot={spot} />
+        <Spot key={spot.id} spot={spot} />
       ))}
     </div>
   );
