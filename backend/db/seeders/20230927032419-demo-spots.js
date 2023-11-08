@@ -21,8 +21,14 @@ const spots = [
     description: "Beautiful lake view from a cozy cabin",
     price: 320.65,
     images: [
-      { url: "https://sposts/spot-1.png", preview: false },
-      { url: "https://spots/spot-2.png", preview: true },
+      {
+        url: "https://a0.muscache.com/im/pictures/01a70000-02c6-425d-be9b-120a4cf9b2c0.jpg?im_w=720",
+        preview: false,
+      },
+      {
+        url: "https://a0.muscache.com/im/pictures/958c7ab9-e224-4a93-ad30-8b6c72304323.jpg?im_w=720",
+        preview: true,
+      },
     ],
   },
   {
@@ -37,7 +43,12 @@ const spots = [
     description:
       "Enjoy a stylish experience at this centrally-located place with a strip view. ",
     price: 220.65,
-    images: [{ url: "https://spots/spot-3.png", preview: true }],
+    images: [
+      {
+        url: "https://a0.muscache.com/im/pictures/hosting/Hosting-986943984454608614/original/8055947b-c38e-45b5-9584-709dcfd2312a.jpeg?im_w=720",
+        preview: true,
+      },
+    ],
   },
 ];
 
