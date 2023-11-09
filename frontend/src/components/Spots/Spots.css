@@ -10,6 +10,8 @@
   flex-direction: column;
   text-decoration: none;
   color: black;
+  max-width: 1000px;
+  margin: auto;
 }
 
 .spot-image {
@@ -17,7 +19,80 @@
   width: 100%;
 }
 
+.spot-detail-images {
+  display: flex;
+  column-gap: 10px;
+}
+
+.spot-detail-other-images {
+  display: grid;
+  grid: 200px 200px / auto;
+}
+
+.spot-detail-other-img {
+  height: -webkit-fill-available;
+}
+
+.spot-detail-preview-image {
+  height: 400px;
+}
+
 .spot-location-stars {
   display: flex;
   justify-content: space-between;
+}
+
+.spot-detail-under-images {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 2px solid;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.spot-detail-price-review-box {
+  border: 2px solid;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 15px;
+  padding: 15px;
+  width: 300px;
+  justify-content: space-between;
+}
+
+.reserve-button {
+  background-color: firebrick;
+  width: 270px;
+  height: 30px;
+  box-shadow: 0cqb;
+  color: white;
+  font-size: 14px;
+}
+
+.spot-detail-price-review-content {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.spot-detail-review-heading {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.spot-detail-review {
+  margin: 35px 0;
+}
+
+.spot-detail-review-firstName {
+  margin: 0;
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.spot-detail-review-timestamp {
+  color: gray;
+  margin-bottom: 10px;
 }

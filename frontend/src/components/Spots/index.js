@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { getSpots } from "../../store/spots";
@@ -8,10 +8,13 @@ const Spots = () => {
   const dispatch = useDispatch();
   const spotsObj = useSelector((state) => state.spots.data);
   const spots = Object.values(spotsObj);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    dispatch(getSpots());
+    dispatch(getSpots()).then(() => setIsLoading(false));
   }, [dispatch]);
+
+  if (isLoading) return <h1>Loading...</h1>;
 
   return (
     <div className="spots-grid">

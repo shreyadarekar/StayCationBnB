@@ -1,21 +1,26 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getSpot } from "../../store/spots";
-import { useEffect } from "react";
+import { getReviewsBySpotId, getSpot } from "../../store/spots";
+import { useEffect, useState } from "react";
 
 const Spot = () => {
   const { spotId } = useParams();
   const dispatch = useDispatch();
-  const spot = useSelector((state) => state.spots.data[spotId]);
+  const spot = useSelector((state) => state.spots.current);
+  const [isLoading, setIsLoading] = useState(true);
+  const [revIsLoading, setRevIsLoading] = useState(true);
 
   useEffect(() => {
-    dispatch(getSpot(spotId));
+    dispatch(getSpot(spotId)).then(() => setIsLoading(false));
+
+    dispatch(getReviewsBySpotId(spotId)).then(() => setRevIsLoading(false));
   }, [dispatch, spotId]);
 
-  if (!spot) return <h1>Loading...</h1>;
+  if (isLoading) return <h1>Loading...</h1>;
 
   const {
     name,
+    description,
     city,
     state,
     country,
@@ -24,6 +29,7 @@ const Spot = () => {
     numReviews,
     price,
     Owner: { firstName, lastName },
+    Reviews,
   } = spot;
 
   const previewImage = SpotImages.find((img) => img.preview === true);
@@ -31,28 +37,44 @@ const Spot = () => {
 
   return (
     <div className="spot-div">
-      <div>{name}</div>
       <div>
-        {city}, {state}, {country}
+        <h1>{name}</h1>
       </div>
       <div>
-        <img src={previewImage.url} alt="previewImage" />
-        {otherImages.map((img) => (
-          <img key={img.id} src={img.url} alt="otherImg" />
-        ))}
+        <h3>
+          {city}, {state}, {country}
+        </h3>
       </div>
-      <div>
-        <div>
-          Hosted by {firstName} {lastName}
+      <div className="spot-detail-images">
+        <img
+          className="spot-detail-preview-image"
+          src={previewImage.url}
+          alt="previewImage"
+        />
+        <div className="spot-detail-other-images">
+          {otherImages.map((img) => (
+            <img
+              className="spot-detail-other-img"
+              key={img.id}
+              src={img.url}
+              alt="otherImg"
+            />
+          ))}
         </div>
+      </div>
+      <div className="spot-detail-under-images">
         <div>
-          <div>
+          <h2>
+            Hosted by {firstName} {lastName}
+          </h2>
+          <p>{description}</p>
+        </div>
+        <div className="spot-detail-price-review-box">
+          <div className="spot-detail-price-review-content">
             <div>${price} night</div>
             <div>
-              <div>
-                <i className="fa-solid fa-star"></i> {avgStarRating}
-              </div>{" "}
-              . <div>{numReviews} reviews</div>
+              <i className="fa-solid fa-star"></i> {avgStarRating} &nbsp;
+              {numReviews} reviews
             </div>
           </div>
           <div>
@@ -63,6 +85,31 @@ const Spot = () => {
               Reserve
             </button>
           </div>
+        </div>
+      </div>
+
+      <div>
+        <div className="spot-detail-review-heading">
+          <i className="fa-solid fa-star"></i> {avgStarRating} &nbsp;
+          {numReviews} reviews
+        </div>
+        <div>
+          {!revIsLoading &&
+            Reviews.map((rev) => (
+              <div className="spot-detail-review">
+                <div className="spot-detail-review-firstName">
+                  {rev.User.firstName}
+                </div>
+                <div className="spot-detail-review-timestamp">
+                  {new Date(rev.createdAt).toLocaleString("default", {
+                    month: "long",
+                  })}
+                  &nbsp;
+                  {new Date(rev.createdAt).getFullYear()}
+                </div>
+                <p>{rev.review}</p>
+              </div>
+            ))}
         </div>
       </div>
     </div>

@@ -1,7 +1,8 @@
 import { csrfFetch } from "./csrf";
 
-const STORE_SPOTS = "spots/storeSpots";
-const STORE_SPOT = "spots/storeSpot";
+const STORE_SPOTS = "spots/STORE_SPOTS";
+const STORE_SPOT = "spots/STORE_SPOT";
+const STORE_REVIEWS = "spots/STORE_REVIEWS";
 
 const storeSpots = (spots) => {
   return {
@@ -14,6 +15,13 @@ const storeSpot = (spot) => {
   return {
     type: STORE_SPOT,
     spot,
+  };
+};
+
+const storeReviews = (reviews) => {
+  return {
+    type: STORE_REVIEWS,
+    reviews,
   };
 };
 
@@ -31,8 +39,14 @@ export const getSpot = (spotId) => async (dispatch) => {
   return response;
 };
 
-const initialState = { data: {}, isLoading: false };
+export const getReviewsBySpotId = (spotId) => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots/${spotId}/reviews`);
+  const data = await response.json();
+  dispatch(storeReviews(data.Reviews));
+  return response;
+};
 
+const initialState = { data: {}, current: {}, isLoading: false };
 const spotsReducer = (state = initialState, action) => {
   switch (action.type) {
     case STORE_SPOTS: {
@@ -43,9 +57,13 @@ const spotsReducer = (state = initialState, action) => {
     }
 
     case STORE_SPOT: {
+      return { ...state, current: action.spot };
+    }
+
+    case STORE_REVIEWS: {
       return {
         ...state,
-        data: { ...state.data, [action.spot.id]: action.spot },
+        current: { ...state.current, Reviews: action.reviews },
       };
     }
 
