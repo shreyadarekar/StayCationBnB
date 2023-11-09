@@ -32,3 +32,7 @@
   color: olive;
   cursor: pointer;
 }
+
+.error {
+  color: red;
+}
