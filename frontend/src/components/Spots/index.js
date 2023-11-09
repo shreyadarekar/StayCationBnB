@@ -25,7 +25,7 @@ const Spots = () => {
           to={`/spots/${spot.id}`}
           title={spot.name}
         >
-          <div>
+          <div className="spot-image-div">
             <img className="spot-image" src={spot.previewImage} alt="preview" />
           </div>
           <div className="spot-location-stars">

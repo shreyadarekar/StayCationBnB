@@ -1,6 +1,7 @@
 .spots-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr));
+  /* grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr)); */
+  grid: 250px / repeat(auto-fill, 250px);
 }
 
 .spot-div {
@@ -14,6 +15,11 @@
   margin: auto;
 }
 
+.spot-image-div {
+  display: flex;
+  align-items: center;
+  height: 200px;
+}
 .spot-image {
   border: 1px solid black;
   width: 100%;
@@ -68,6 +74,7 @@
   box-shadow: 0cqb;
   color: white;
   font-size: 14px;
+  cursor: pointer;
 }
 
 .spot-detail-price-review-content {

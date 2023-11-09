@@ -14,7 +14,16 @@ function Navigation({ isLoaded }) {
         <img src={logo} alt="logo" className="logo" />
         StayCationBnB
       </NavLink>
-      {isLoaded && <ProfileButton user={sessionUser} />}
+      {isLoaded && (
+        <div>
+          {sessionUser && (
+            <NavLink className="create-new-spot-link" exact to="/spots/new">
+              Create a new spot
+            </NavLink>
+          )}
+          <ProfileButton user={sessionUser} />
+        </div>
+      )}
     </nav>
   );
 }
