@@ -3,6 +3,7 @@ import { csrfFetch } from "./csrf";
 const STORE_SPOTS = "spots/STORE_SPOTS";
 const STORE_SPOT = "spots/STORE_SPOT";
 const STORE_REVIEWS = "spots/STORE_REVIEWS";
+const ADD_SPOT = "spots/ADD_SPOT";
 
 const storeSpots = (spots) => {
   return {
@@ -45,6 +46,10 @@ export const getReviewsBySpotId = (spotId) => async (dispatch) => {
   dispatch(storeReviews(data.Reviews));
   return response;
 };
+
+// export const createSpot = (spot) => async (dispatch) => {
+//   const
+// };
 
 const initialState = { data: {}, current: {}, isLoading: false };
 const spotsReducer = (state = initialState, action) => {
