@@ -26,6 +26,13 @@ const storeReviews = (reviews) => {
   };
 };
 
+const addSpot = (spot) => {
+  return {
+    type: ADD_SPOT,
+    spot,
+  };
+};
+
 export const getSpots = () => async (dispatch) => {
   const response = await csrfFetch("/api/spots");
   const data = await response.json();
@@ -47,9 +54,15 @@ export const getReviewsBySpotId = (spotId) => async (dispatch) => {
   return response;
 };
 
-// export const createSpot = (spot) => async (dispatch) => {
-//   const
-// };
+export const createSpot = (spot) => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots`, {
+    method: "POST",
+    body: JSON.stringify(spot),
+  });
+  const data = await response.json();
+  dispatch(addSpot(data));
+  return response;
+};
 
 const initialState = { data: {}, current: {}, isLoading: false };
 const spotsReducer = (state = initialState, action) => {
@@ -69,6 +82,13 @@ const spotsReducer = (state = initialState, action) => {
       return {
         ...state,
         current: { ...state.current, Reviews: action.reviews },
+      };
+    }
+
+    case ADD_SPOT: {
+      return {
+        ...state,
+        data: { ...state.data, [action.spot.id]: action.spot },
       };
     }
 
