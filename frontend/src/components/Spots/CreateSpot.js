@@ -22,47 +22,143 @@ const CreateSpot = () => {
   const [image4, setImage4] = useState("");
   const [errors, setErrors] = useState({});
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const validate = () => {
     setErrors({});
 
-    const newSpot = await dispatch(
-      createSpot({
-        country,
-        address,
-        city,
-        state,
-        lat,
-        lng,
-        name,
-        description,
-        price,
-      })
-    ).catch(async (res) => {
-      const data = await res.json();
-      if (data && data.errors) {
-        setErrors(data.errors);
-      }
-    });
+    if (!country)
+      setErrors((errors) => ({ ...errors, country: "Country is required" }));
 
-    if (newSpot && newSpot.id) {
-      dispatch(
-        addImageToSpot(newSpot.id, { url: previewImage, preview: true })
-      );
-      if (image1) {
-        dispatch(addImageToSpot(newSpot.id, { url: image1, preview: false }));
-      }
-      if (image2) {
-        dispatch(addImageToSpot(newSpot.id, { url: image2, preview: false }));
-      }
-      if (image3) {
-        dispatch(addImageToSpot(newSpot.id, { url: image3, preview: false }));
-      }
-      if (image4) {
-        dispatch(addImageToSpot(newSpot.id, { url: image4, preview: false }));
-      }
+    if (!address)
+      setErrors((errors) => ({ ...errors, address: "Address is required" }));
 
-      history.push(`/spots/${newSpot.id}`);
+    if (!city) setErrors((errors) => ({ ...errors, city: "City is required" }));
+
+    if (!state)
+      setErrors((errors) => ({ ...errors, state: "State is required" }));
+
+    if (!lat)
+      setErrors((errors) => ({ ...errors, lat: "Latitude is required" }));
+
+    if (!lng)
+      setErrors((errors) => ({ ...errors, lng: "Longitude is required" }));
+
+    if (!description || description.length < 30)
+      setErrors((errors) => ({
+        ...errors,
+        description: "Description needs a minium of 30 characters",
+      }));
+
+    if (!name) setErrors((errors) => ({ ...errors, name: "Name is required" }));
+
+    if (!price)
+      setErrors((errors) => ({ ...errors, price: "Price is required" }));
+
+    if (!previewImage)
+      setErrors((errors) => ({
+        ...errors,
+        previewImage: "PreviewImage is required",
+      }));
+    else if (
+      !previewImage.endsWith(".png") &&
+      !previewImage.endsWith(".jpg") &&
+      !previewImage.endsWith(".jpeg")
+    )
+      setErrors((errors) => ({
+        ...errors,
+        previewImage: "Image URL must end in .png, .jpg, or .jpeg",
+      }));
+
+    if (
+      image1 &&
+      !image1.endsWith(".png") &&
+      !image1.endsWith(".jpg") &&
+      !image1.endsWith(".jpeg")
+    )
+      setErrors((errors) => ({
+        ...errors,
+        image1: "Image URL must end in .png, .jpg, or .jpeg",
+      }));
+
+    if (
+      image2 &&
+      !image2.endsWith(".png") &&
+      !image2.endsWith(".jpg") &&
+      !image2.endsWith(".jpeg")
+    )
+      setErrors((errors) => ({
+        ...errors,
+        image2: "Image URL must end in .png, .jpg, or .jpeg",
+      }));
+
+    if (
+      image3 &&
+      !image3.endsWith(".png") &&
+      !image3.endsWith(".jpg") &&
+      !image3.endsWith(".jpeg")
+    )
+      setErrors((errors) => ({
+        ...errors,
+        image3: "Image URL must end in .png, .jpg, or .jpeg",
+      }));
+
+    if (
+      image4 &&
+      !image4.endsWith(".png") &&
+      !image4.endsWith(".jpg") &&
+      !image4.endsWith(".jpeg")
+    )
+      setErrors((errors) => ({
+        ...errors,
+        image3: "Image URL must end in .png, .jpg, or .jpeg",
+      }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    validate();
+
+    console.log("errors", errors);
+
+    if (Object.keys(errors).length === 0) {
+      console.log("create spot");
+      const newSpot = await dispatch(
+        createSpot({
+          country,
+          address,
+          city,
+          state,
+          lat,
+          lng,
+          name,
+          description,
+          price,
+        })
+      ).catch(async (res) => {
+        const data = await res.json();
+        if (data && data.errors) {
+          setErrors((errors) => ({ ...errors, ...data.errors }));
+        }
+      });
+
+      if (newSpot && newSpot.id) {
+        dispatch(
+          addImageToSpot(newSpot.id, { url: previewImage, preview: true })
+        );
+        if (image1) {
+          dispatch(addImageToSpot(newSpot.id, { url: image1, preview: false }));
+        }
+        if (image2) {
+          dispatch(addImageToSpot(newSpot.id, { url: image2, preview: false }));
+        }
+        if (image3) {
+          dispatch(addImageToSpot(newSpot.id, { url: image3, preview: false }));
+        }
+        if (image4) {
+          dispatch(addImageToSpot(newSpot.id, { url: image4, preview: false }));
+        }
+
+        history.push(`/spots/${newSpot.id}`);
+      }
     }
   };
 
@@ -209,8 +305,10 @@ const CreateSpot = () => {
             onChange={(e) => setPreviewImage(e.target.value)}
             placeholder="Preview Image URL"
             id="previewImage"
-            required
           />
+          {errors.previewImage && (
+            <p className="error">{errors.previewImage}</p>
+          )}
           <br></br>
           <br></br>
 
@@ -222,6 +320,7 @@ const CreateSpot = () => {
             placeholder="Image URL"
             id="image1"
           />
+          {errors.image1 && <p className="error">{errors.image1}</p>}
           <br></br>
           <br></br>
           <label htmlFor="image2"></label>
@@ -232,6 +331,7 @@ const CreateSpot = () => {
             placeholder="Image URL"
             id="image2"
           />
+          {errors.image2 && <p className="error">{errors.image2}</p>}
           <br></br>
           <br></br>
           <label htmlFor="image3"></label>
@@ -242,6 +342,7 @@ const CreateSpot = () => {
             placeholder="Image URL"
             id="image3"
           />
+          {errors.image3 && <p className="error">{errors.image3}</p>}
           <br></br>
           <br></br>
           <label htmlFor="image4"></label>
@@ -252,6 +353,7 @@ const CreateSpot = () => {
             placeholder="Image URL"
             id="image4"
           />
+          {errors.image4 && <p className="error">{errors.image4}</p>}
           <br></br>
           <br></br>
         </div>
