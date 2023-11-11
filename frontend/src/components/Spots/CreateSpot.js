@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createSpotWithImages } from "../../store/spots";
-// import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useHistory } from "react-router-dom";
+import { addImageToSpot, createSpot } from "../../store/spots";
 
 const CreateSpot = () => {
   const dispatch = useDispatch();
-  //   const history = useHistory();
+  const history = useHistory();
   const [country, setCountry] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
@@ -22,29 +22,22 @@ const CreateSpot = () => {
   const [image4, setImage4] = useState("");
   const [errors, setErrors] = useState({});
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
 
-    dispatch(
-      createSpotWithImages(
-        {
-          country,
-          address,
-          city,
-          state,
-          lat,
-          lng,
-          name,
-          description,
-          price,
-        },
-        previewImage,
-        image1,
-        image2,
-        image3,
-        image4
-      )
+    const newSpot = await dispatch(
+      createSpot({
+        country,
+        address,
+        city,
+        state,
+        lat,
+        lng,
+        name,
+        description,
+        price,
+      })
     ).catch(async (res) => {
       const data = await res.json();
       if (data && data.errors) {
@@ -52,10 +45,25 @@ const CreateSpot = () => {
       }
     });
 
-    // const newSpot = await response.json();
-    // if (newSpot) {
-    //   history.push(`/spots/${newSpot.id}`);
-    // }
+    if (newSpot && newSpot.id) {
+      dispatch(
+        addImageToSpot(newSpot.id, { url: previewImage, preview: true })
+      );
+      if (image1) {
+        dispatch(addImageToSpot(newSpot.id, { url: image1, preview: false }));
+      }
+      if (image2) {
+        dispatch(addImageToSpot(newSpot.id, { url: image2, preview: false }));
+      }
+      if (image3) {
+        dispatch(addImageToSpot(newSpot.id, { url: image3, preview: false }));
+      }
+      if (image4) {
+        dispatch(addImageToSpot(newSpot.id, { url: image4, preview: false }));
+      }
+
+      history.push(`/spots/${newSpot.id}`);
+    }
   };
 
   return (
