@@ -103,3 +103,7 @@
   color: gray;
   margin-bottom: 10px;
 }
+
+.error {
+  color: red;
+}

@@ -54,15 +54,40 @@ export const getReviewsBySpotId = (spotId) => async (dispatch) => {
   return response;
 };
 
-export const createSpot = (spot) => async (dispatch) => {
-  const response = await csrfFetch(`/api/spots`, {
+export const addImageToSpot = (spotId, image) => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots/${spotId}/images`, {
     method: "POST",
-    body: JSON.stringify(spot),
+    body: JSON.stringify(image),
   });
-  const data = await response.json();
-  dispatch(addSpot(data));
+  // const data = await response.json();
+  // dispatch(addSpot(data));
   return response;
 };
+
+export const createSpotWithImages =
+  (spot, previewImage, image1, image2, image3, image4) => async (dispatch) => {
+    const response = await csrfFetch(`/api/spots`, {
+      method: "POST",
+      body: JSON.stringify(spot),
+    });
+    const data = await response.json();
+    dispatch(addSpot(data));
+
+    dispatch(addImageToSpot(data.id, { url: previewImage, preview: true }));
+    if (image1) {
+      dispatch(addImageToSpot(data.id, { url: image1, preview: false }));
+    }
+    if (image2) {
+      dispatch(addImageToSpot(data.id, { url: image2, preview: false }));
+    }
+    if (image3) {
+      dispatch(addImageToSpot(data.id, { url: image3, preview: false }));
+    }
+    if (image4) {
+      dispatch(addImageToSpot(data.id, { url: image4, preview: false }));
+    }
+    return response;
+  };
 
 const initialState = { data: {}, current: {}, isLoading: false };
 const spotsReducer = (state = initialState, action) => {

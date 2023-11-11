@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createSpot } from "../../store/spots";
+import { createSpotWithImages } from "../../store/spots";
+// import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const CreateSpot = () => {
   const dispatch = useDispatch();
@@ -23,19 +24,38 @@ const CreateSpot = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setErrors({});
+
     dispatch(
-      createSpot({
-        country,
-        address,
-        city,
-        state,
-        lat: Number(lat),
-        lng: Number(lng),
-        name,
-        description,
-        price: Number(price),
-      })
-    );
+      createSpotWithImages(
+        {
+          country,
+          address,
+          city,
+          state,
+          lat,
+          lng,
+          name,
+          description,
+          price,
+        },
+        previewImage,
+        image1,
+        image2,
+        image3,
+        image4
+      )
+    ).catch(async (res) => {
+      const data = await res.json();
+      if (data && data.errors) {
+        setErrors(data.errors);
+      }
+    });
+
+    // const newSpot = await response.json();
+    // if (newSpot) {
+    //   history.push(`/spots/${newSpot.id}`);
+    // }
   };
 
   return (
@@ -50,7 +70,7 @@ const CreateSpot = () => {
           </p>
         </div>
         <div>
-          <label for="country">Country</label>
+          <label htmlFor="country">Country</label>
           <input
             type="text"
             value={country}
@@ -58,9 +78,10 @@ const CreateSpot = () => {
             placeholder="Country"
             id="country"
           ></input>
+          {errors.country && <p className="error">{errors.country}</p>}
         </div>
         <div>
-          <label for="street-address">Street Address</label>
+          <label htmlFor="street-address">Street Address</label>
           <input
             type="text"
             value={address}
@@ -68,9 +89,10 @@ const CreateSpot = () => {
             placeholder="Address"
             id="street-address"
           />
+          {errors.address && <p className="error">{errors.address}</p>}
         </div>
         <div>
-          <label for="city">City</label>
+          <label htmlFor="city">City</label>
           <input
             type="text"
             value={city}
@@ -78,9 +100,10 @@ const CreateSpot = () => {
             placeholder="City"
             id="city"
           />
+          {errors.city && <p className="error">{errors.city}</p>}
         </div>
         <div>
-          <label for="state">State</label>
+          <label htmlFor="state">State</label>
           <input
             type="text"
             value={state}
@@ -88,19 +111,21 @@ const CreateSpot = () => {
             placeholder="STATE"
             id="state"
           />
+          {errors.state && <p className="error">{errors.state}</p>}
         </div>
         <div>
-          <label for="latitude">Latitude</label>
+          <label htmlFor="latitude">Latitude</label>
           <input
             type="text"
             value={lat}
             onChange={(e) => setLat(e.target.value)}
             placeholder="Latitude"
-            id="state"
+            id="latitude"
           />
+          {errors.lat && <p className="error">{errors.lat}</p>}
         </div>
         <div>
-          <label for="longitude">Longitude</label>
+          <label htmlFor="longitude">Longitude</label>
           <input
             type="text"
             value={lng}
@@ -108,6 +133,7 @@ const CreateSpot = () => {
             placeholder="Longitude"
             id="longitude"
           />
+          {errors.lng && <p className="error">{errors.lng}</p>}
         </div>
         <div>
           <h3>Describe your place to guests</h3>
@@ -117,7 +143,7 @@ const CreateSpot = () => {
           </p>
         </div>
         <div>
-          <label for="place-description"></label>
+          <label htmlFor="place-description"></label>
           <input
             type="textarea"
             value={description}
@@ -125,6 +151,7 @@ const CreateSpot = () => {
             placeholder="Please write at least 30 characters"
             id="place-description"
           />
+          {errors.description && <p className="error">{errors.description}</p>}
         </div>
         <div>
           <h3>Create a title for your spot</h3>
@@ -134,7 +161,7 @@ const CreateSpot = () => {
           </p>
         </div>
         <div>
-          <label for="spot-name"></label>
+          <label htmlFor="spot-name"></label>
           <input
             type="text"
             value={name}
@@ -142,6 +169,7 @@ const CreateSpot = () => {
             placeholder="Name of your spot"
             id="spot-name"
           />
+          {errors.name && <p className="error">{errors.name}</p>}
         </div>
         <div>
           <h3>Set a base price for your spot</h3>
@@ -151,7 +179,7 @@ const CreateSpot = () => {
           </p>
         </div>
         <div>
-          <label for="price">$ </label>
+          <label htmlFor="price">$ </label>
           <input
             type="text"
             value={price}
@@ -159,24 +187,26 @@ const CreateSpot = () => {
             placeholder="Price per night (USD)"
             id="price"
           />
+          {errors.price && <p className="error">{errors.price}</p>}
         </div>
         <div>
           <h3>Liven up your spot with photos</h3>
           <p>Submit a link to at least one photo to publish your spot</p>
         </div>
         <div>
-          <label for="previewImage"></label>
+          <label htmlFor="previewImage"></label>
           <input
             type="text"
             value={previewImage}
             onChange={(e) => setPreviewImage(e.target.value)}
             placeholder="Preview Image URL"
             id="previewImage"
+            required
           />
           <br></br>
           <br></br>
 
-          <label for="image1"></label>
+          <label htmlFor="image1"></label>
           <input
             type="text"
             value={image1}
@@ -186,7 +216,7 @@ const CreateSpot = () => {
           />
           <br></br>
           <br></br>
-          <label for="image2"></label>
+          <label htmlFor="image2"></label>
           <input
             type="text"
             value={image2}
@@ -196,7 +226,7 @@ const CreateSpot = () => {
           />
           <br></br>
           <br></br>
-          <label for="image3"></label>
+          <label htmlFor="image3"></label>
           <input
             type="text"
             value={image3}
@@ -206,7 +236,7 @@ const CreateSpot = () => {
           />
           <br></br>
           <br></br>
-          <label for="image4"></label>
+          <label htmlFor="image4"></label>
           <input
             type="text"
             value={image4}
