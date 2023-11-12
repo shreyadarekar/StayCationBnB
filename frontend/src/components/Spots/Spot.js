@@ -50,7 +50,7 @@ const Spot = () => {
   );
 
   return (
-    <div className="spot-div">
+    <div className="spot-detail-div">
       <div>
         <h1>{name}</h1>
       </div>
@@ -65,16 +65,14 @@ const Spot = () => {
           src={previewImage.url}
           alt="previewImage"
         />
-        <div className="spot-detail-other-images">
-          {otherImages.map((img) => (
-            <img
-              className="spot-detail-other-img"
-              key={img.id}
-              src={img.url}
-              alt="otherImg"
-            />
-          ))}
-        </div>
+        {otherImages.map((img) => (
+          <img
+            className="spot-detail-other-image"
+            key={img.id}
+            src={img.url}
+            alt="otherImg"
+          />
+        ))}
       </div>
       <div className="spot-detail-under-images">
         <div>
