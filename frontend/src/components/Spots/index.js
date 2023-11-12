@@ -33,10 +33,12 @@ const Spots = () => {
               {spot.city}, {spot.state}
             </div>
             <div>
-              <i className="fa-solid fa-star"></i> {spot.avgRating}
+              <i className="fa-solid fa-star"></i> <span style={{ fontWeight: "bold" }}>{spot.avgRating}</span>
             </div>
           </div>
-          <div>${spot.price} night</div>
+          <div>
+            <span style={{ fontWeight: "bold" }}>${spot.price}</span> night
+          </div>
         </NavLink>
       ))}
     </div>

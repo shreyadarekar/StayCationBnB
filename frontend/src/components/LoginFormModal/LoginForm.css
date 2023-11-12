@@ -19,9 +19,15 @@
   font-size: 14px;
   margin: 15px 5px;
   width: 300px;
-  height: 30px;
+  height: 40px;
   background-color: tomato;
   cursor: pointer;
+}
+
+.login-button:disabled {
+  /* border: 1px solid #999999; */
+  background-color: #cccccc;
+  color: #666666;
 }
 
 .demo-user-button {

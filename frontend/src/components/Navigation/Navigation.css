@@ -37,6 +37,11 @@
   margin: 4px;
 }
 
+.profile-initial-dropdown {
+  margin: 5px 15px;
+  width: 125px;
+}
+
 .profile-dropdown {
   /* padding: 12px; */
   position: absolute;

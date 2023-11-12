@@ -1,7 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getReviewsBySpotId, getSpot } from "../../store/spots";
+import { getReviewsBySpotId, getSpot } from "../../../store/spots";
 import { useEffect, useState } from "react";
+import "./Spot.css";
 
 const Spot = () => {
   const { spotId } = useParams();
@@ -52,7 +53,7 @@ const Spot = () => {
   return (
     <div className="spot-detail-div">
       <div>
-        <h1>{name}</h1>
+        <h1 style={{ marginBottom: 0 }}>{name}</h1>
       </div>
       <div>
         <h3>
@@ -75,7 +76,7 @@ const Spot = () => {
         ))}
       </div>
       <div className="spot-detail-under-images">
-        <div>
+        <div style={{ marginRight: "20px" }}>
           <h2>
             Hosted by {firstName} {lastName}
           </h2>
@@ -83,7 +84,12 @@ const Spot = () => {
         </div>
         <div className="spot-detail-price-review-box">
           <div className="spot-detail-price-review-content">
-            <div>${price} night</div>
+            <div>
+              <span style={{ fontWeight: "bold", fontSize: "20px" }}>
+                ${price}
+              </span>{" "}
+              night
+            </div>
             <div>{reviewsComponent}</div>
           </div>
           <div>

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { addImageToSpot, createSpot } from "../../store/spots";
+import { addImageToSpot, createSpot } from "../../../store/spots";
+import "./CreateSpot.css";
 
 const CreateSpot = () => {
   const dispatch = useDispatch();
@@ -160,40 +161,50 @@ const CreateSpot = () => {
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-        <h2>Create a new Spot</h2>
-        <div>
-          <h3>Where's your place located?</h3>
-          <p>
-            Guests will only get your exact address once they booked a
-            reservation.
-          </p>
-        </div>
-        <div>
-          <label htmlFor="country">Country</label>
-          <input
-            type="text"
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            placeholder="Country"
-            id="country"
-          ></input>
-          {errors.country && <p className="error">{errors.country}</p>}
-        </div>
-        <div>
-          <label htmlFor="street-address">Street Address</label>
-          <input
-            type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            placeholder="Address"
-            id="street-address"
-          />
-          {errors.address && <p className="error">{errors.address}</p>}
-        </div>
-        <div>
-          <label htmlFor="city">City</label>
+    <form className="create-spot-form" onSubmit={handleSubmit}>
+      <h2>Create a new Spot</h2>
+
+      <div>
+        <h3 className="section-h3">Where's your place located?</h3>
+        <p className="section-p">
+          Guests will only get your exact address once they booked a
+          reservation.
+        </p>
+      </div>
+
+      <div className="input-row">
+        <label htmlFor="country">
+          Country <span className="error">{errors.country}</span>
+        </label>
+        <input
+          className="input-wide"
+          type="text"
+          value={country}
+          onChange={(e) => setCountry(e.target.value)}
+          placeholder="Country"
+          id="country"
+        ></input>
+      </div>
+
+      <div className="input-row">
+        <label htmlFor="street-address">
+          Street Address <span className="error">{errors.address}</span>
+        </label>
+        <input
+          className="input-wide"
+          type="text"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          placeholder="Address"
+          id="street-address"
+        />
+      </div>
+
+      <div className="input-row-two-col">
+        <div className="small-input-div" style={{ width: "300px" }}>
+          <label htmlFor="city">
+            City <span className="error">{errors.city}</span>
+          </label>
           <input
             type="text"
             value={city}
@@ -201,10 +212,12 @@ const CreateSpot = () => {
             placeholder="City"
             id="city"
           />
-          {errors.city && <p className="error">{errors.city}</p>}
         </div>
-        <div>
-          <label htmlFor="state">State</label>
+        <div>&nbsp;,&nbsp;</div>
+        <div className="small-input-div">
+          <label htmlFor="state">
+            State <span className="error">{errors.state}</span>
+          </label>
           <input
             type="text"
             value={state}
@@ -212,10 +225,14 @@ const CreateSpot = () => {
             placeholder="STATE"
             id="state"
           />
-          {errors.state && <p className="error">{errors.state}</p>}
         </div>
-        <div>
-          <label htmlFor="latitude">Latitude</label>
+      </div>
+
+      <div className="input-row-two-col">
+        <div className="small-input-div" style={{ width: "220px" }}>
+          <label htmlFor="latitude">
+            Latitude <span className="error">{errors.lat}</span>
+          </label>
           <input
             type="text"
             value={lat}
@@ -223,10 +240,12 @@ const CreateSpot = () => {
             placeholder="Latitude"
             id="latitude"
           />
-          {errors.lat && <p className="error">{errors.lat}</p>}
         </div>
-        <div>
-          <label htmlFor="longitude">Longitude</label>
+        <div>&nbsp;,&nbsp;</div>
+        <div className="small-input-div" style={{ width: "220px" }}>
+          <label htmlFor="longitude">
+            Longitude <span className="error">{errors.lng}</span>
+          </label>
           <input
             type="text"
             value={lng}
@@ -234,69 +253,77 @@ const CreateSpot = () => {
             placeholder="Longitude"
             id="longitude"
           />
-          {errors.lng && <p className="error">{errors.lng}</p>}
         </div>
-        <div>
-          <h3>Describe your place to guests</h3>
-          <p>
-            Mention the best features of your space, any special amentities like
-            fast wif or parking, and what you love about the neighborhood.
-          </p>
-        </div>
-        <div>
-          <label htmlFor="place-description"></label>
+      </div>
+
+      <div className="inner-section-div">
+        <h3 className="section-h3">Describe your place to guests</h3>
+        <p className="section-p">
+          Mention the best features of your space, any special amenities like
+          fast wif or parking, and what you love about the neighborhood.
+        </p>
+      </div>
+      <div>
+        <textarea
+          className="input-wide"
+          rows="10"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Please write at least 30 characters"
+          id="place-description"
+        />
+        {errors.description && <p className="error">{errors.description}</p>}
+      </div>
+
+      <div className="inner-section-div">
+        <h3 className="section-h3">Create a title for your spot</h3>
+        <p className="section-p">
+          Catch guests' attention with a spot title that highlights what makes
+          your place special.
+        </p>
+      </div>
+      <div>
+        <input
+          className="input-wide"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Name of your spot"
+          id="spot-name"
+        />
+        {errors.name && <p className="error">{errors.name}</p>}
+      </div>
+
+      <div className="inner-section-div">
+        <h3 className="section-h3">Set a base price for your spot</h3>
+        <p className="section-p">
+          Competitive pricing can help your listing stand out and rank higher in
+          search results.
+        </p>
+      </div>
+      <div>
+        <label htmlFor="price">$ </label>
+        <input
+          style={{ width: "90%" }}
+          type="text"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
+          placeholder="Price per night (USD)"
+          id="price"
+        />
+        {errors.price && <p className="error">{errors.price}</p>}
+      </div>
+
+      <div className="inner-section-div">
+        <h3 className="section-h3">Liven up your spot with photos</h3>
+        <p className="section-p">
+          Submit a link to at least one photo to publish your spot
+        </p>
+      </div>
+      <div>
+        <div className="input-image-div">
           <input
-            type="textarea"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Please write at least 30 characters"
-            id="place-description"
-          />
-          {errors.description && <p className="error">{errors.description}</p>}
-        </div>
-        <div>
-          <h3>Create a title for your spot</h3>
-          <p>
-            Catch guests' attention with a spot title that highlights what makes
-            your place special.
-          </p>
-        </div>
-        <div>
-          <label htmlFor="spot-name"></label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Name of your spot"
-            id="spot-name"
-          />
-          {errors.name && <p className="error">{errors.name}</p>}
-        </div>
-        <div>
-          <h3>Set a base price for your spot</h3>
-          <p>
-            Competitive pricing can help your listing stand out and rank higher
-            in search results.
-          </p>
-        </div>
-        <div>
-          <label htmlFor="price">$ </label>
-          <input
-            type="text"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            placeholder="Price per night (USD)"
-            id="price"
-          />
-          {errors.price && <p className="error">{errors.price}</p>}
-        </div>
-        <div>
-          <h3>Liven up your spot with photos</h3>
-          <p>Submit a link to at least one photo to publish your spot</p>
-        </div>
-        <div>
-          <label htmlFor="previewImage"></label>
-          <input
+            className="input-wide"
             type="text"
             value={previewImage}
             onChange={(e) => setPreviewImage(e.target.value)}
@@ -306,11 +333,11 @@ const CreateSpot = () => {
           {errors.previewImage && (
             <p className="error">{errors.previewImage}</p>
           )}
-          <br></br>
-          <br></br>
+        </div>
 
-          <label htmlFor="image1"></label>
+        <div className="input-image-div">
           <input
+            className="input-wide"
             type="text"
             value={image1}
             onChange={(e) => setImage1(e.target.value)}
@@ -318,10 +345,11 @@ const CreateSpot = () => {
             id="image1"
           />
           {errors.image1 && <p className="error">{errors.image1}</p>}
-          <br></br>
-          <br></br>
-          <label htmlFor="image2"></label>
+        </div>
+
+        <div className="input-image-div">
           <input
+            className="input-wide"
             type="text"
             value={image2}
             onChange={(e) => setImage2(e.target.value)}
@@ -329,10 +357,11 @@ const CreateSpot = () => {
             id="image2"
           />
           {errors.image2 && <p className="error">{errors.image2}</p>}
-          <br></br>
-          <br></br>
-          <label htmlFor="image3"></label>
+        </div>
+
+        <div className="input-image-div">
           <input
+            className="input-wide"
             type="text"
             value={image3}
             onChange={(e) => setImage3(e.target.value)}
@@ -340,10 +369,11 @@ const CreateSpot = () => {
             id="image3"
           />
           {errors.image3 && <p className="error">{errors.image3}</p>}
-          <br></br>
-          <br></br>
-          <label htmlFor="image4"></label>
+        </div>
+
+        <div className="input-image-div">
           <input
+            className="input-wide"
             type="text"
             value={image4}
             onChange={(e) => setImage4(e.target.value)}
@@ -351,15 +381,15 @@ const CreateSpot = () => {
             id="image4"
           />
           {errors.image4 && <p className="error">{errors.image4}</p>}
-          <br></br>
-          <br></br>
         </div>
-        <br></br>
-        <div>
-          <button type="submit">Create a Spot</button>
-        </div>
-      </form>
-    </>
+      </div>
+
+      <div className="submit-button-div">
+        <button className="submit-button" type="submit">
+          Create Spot
+        </button>
+      </div>
+    </form>
   );
 };
 
