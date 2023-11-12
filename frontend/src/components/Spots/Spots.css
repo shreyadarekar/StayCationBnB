@@ -2,7 +2,7 @@
   display: grid;
   grid: 250px / repeat(auto-fill, 250px);
   max-width: 1000px;
-  margin: 10px 0;
+  margin: 10px auto;
 }
 
 .spot-div {
