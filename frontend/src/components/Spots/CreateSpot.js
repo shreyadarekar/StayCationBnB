@@ -117,10 +117,7 @@ const CreateSpot = () => {
     e.preventDefault();
     validate();
 
-    console.log("errors", errors);
-
     if (Object.keys(errors).length === 0) {
-      console.log("create spot");
       const newSpot = await dispatch(
         createSpot({
           country,

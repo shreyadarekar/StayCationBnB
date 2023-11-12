@@ -35,6 +35,20 @@ const Spot = () => {
   const previewImage = SpotImages.find((img) => img.preview === true);
   const otherImages = SpotImages.filter((img) => img.preview !== true);
 
+  const reviewsComponent = (
+    <>
+      <i className="fa-solid fa-star"></i>{" "}
+      {numReviews ? (
+        <>
+          {avgStarRating} &nbsp;
+          {numReviews} reviews
+        </>
+      ) : (
+        "New"
+      )}
+    </>
+  );
+
   return (
     <div className="spot-div">
       <div>
@@ -72,10 +86,7 @@ const Spot = () => {
         <div className="spot-detail-price-review-box">
           <div className="spot-detail-price-review-content">
             <div>${price} night</div>
-            <div>
-              <i className="fa-solid fa-star"></i> {avgStarRating} &nbsp;
-              {numReviews} reviews
-            </div>
+            <div>{reviewsComponent}</div>
           </div>
           <div>
             <button
@@ -89,10 +100,7 @@ const Spot = () => {
       </div>
 
       <div>
-        <div className="spot-detail-review-heading">
-          <i className="fa-solid fa-star"></i> {avgStarRating} &nbsp;
-          {numReviews} reviews
-        </div>
+        <div className="spot-detail-review-heading">{reviewsComponent}</div>
         <div>
           {!revIsLoading &&
             Reviews.map((rev) => (
