@@ -81,3 +81,13 @@
   color: gray;
   margin-bottom: 10px;
 }
+.post-review-div {
+  margin: 10px 0;
+}
+
+.post-review-button {
+  color: white;
+  background-color: grey;
+  font-size: 14px;
+  border: 2px solid black;
+}

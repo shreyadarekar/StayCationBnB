@@ -10,6 +10,7 @@ const Spot = () => {
   const spot = useSelector((state) => state.spots.current);
   const [isLoading, setIsLoading] = useState(true);
   const [revIsLoading, setRevIsLoading] = useState(true);
+  const sessionUser = useSelector((state) => state.session.user);
 
   useEffect(() => {
     dispatch(getSpot(spotId)).then(() => setIsLoading(false));
@@ -21,6 +22,7 @@ const Spot = () => {
 
   const {
     name,
+    ownerId,
     description,
     city,
     state,
@@ -32,6 +34,11 @@ const Spot = () => {
     Owner: { firstName, lastName },
     Reviews,
   } = spot;
+
+  const loggedInUserReview =
+    Reviews && sessionUser
+      ? Reviews.find((rev) => rev.userId === sessionUser.id)
+      : undefined;
 
   const previewImage = SpotImages.find((img) => img.preview === true);
   const otherImages = SpotImages.filter((img) => img.preview !== true);
@@ -105,10 +112,15 @@ const Spot = () => {
 
       <div>
         <div className="spot-detail-review-heading">{reviewsComponent}</div>
+        <div className="post-review-div">
+          {sessionUser && sessionUser.id !== ownerId && !loggedInUserReview && (
+            <button className="post-review-button">Post Your Review</button>
+          )}
+        </div>
         <div>
           {!revIsLoading &&
             Reviews.map((rev) => (
-              <div className="spot-detail-review">
+              <div key={rev.id} className="spot-detail-review">
                 <div className="spot-detail-review-firstName">
                   {rev.User.firstName}
                 </div>
