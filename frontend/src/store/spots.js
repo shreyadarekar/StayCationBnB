@@ -72,6 +72,14 @@ export const addImageToSpot = (spotId, image) => async () => {
   return response;
 };
 
+export const addReviewToSpot = (spotId, review, stars) => async () => {
+  const response = await csrfFetch(`/api/spots/${spotId}/reviews`, {
+    method: "POST",
+    body: JSON.stringify({ review, stars }),
+  });
+  return response;
+};
+
 const initialState = { data: {}, current: {}, isLoading: false };
 const spotsReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -82,6 +90,13 @@ const spotsReducer = (state = initialState, action) => {
       return { ...state, data: spots };
     }
 
+    case ADD_SPOT: {
+      return {
+        ...state,
+        data: { ...state.data, [action.spot.id]: action.spot },
+      };
+    }
+
     case STORE_SPOT: {
       return { ...state, current: action.spot };
     }
@@ -90,13 +105,6 @@ const spotsReducer = (state = initialState, action) => {
       return {
         ...state,
         current: { ...state.current, Reviews: action.reviews },
-      };
-    }
-
-    case ADD_SPOT: {
-      return {
-        ...state,
-        data: { ...state.data, [action.spot.id]: action.spot },
       };
     }
 

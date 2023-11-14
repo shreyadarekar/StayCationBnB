@@ -21,11 +21,10 @@
   width: 300px;
   height: 40px;
   background-color: tomato;
+  color: white;
   cursor: pointer;
 }
-
 .login-button:disabled {
-  /* border: 1px solid #999999; */
   background-color: #cccccc;
   color: #666666;
 }

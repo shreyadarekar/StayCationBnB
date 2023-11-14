@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { getReviewsBySpotId, getSpot } from "../../../store/spots";
 import { useEffect, useState } from "react";
 import "./Spot.css";
+import OpenModalButton from "../../OpenModalButton";
+import ReviewFormModal from "../../ReviewFormModal";
 
 const Spot = () => {
   const { spotId } = useParams();
@@ -11,6 +13,15 @@ const Spot = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [revIsLoading, setRevIsLoading] = useState(true);
   const sessionUser = useSelector((state) => state.session.user);
+
+  const refetchSpot = () => {
+    setIsLoading(true);
+    setRevIsLoading(true);
+
+    dispatch(getSpot(spotId)).then(() => setIsLoading(false));
+
+    dispatch(getReviewsBySpotId(spotId)).then(() => setRevIsLoading(false));
+  };
 
   useEffect(() => {
     dispatch(getSpot(spotId)).then(() => setIsLoading(false));
@@ -49,7 +60,7 @@ const Spot = () => {
       {numReviews ? (
         <>
           {avgStarRating} &nbsp;
-          {numReviews} reviews
+          {numReviews} {numReviews > 1 ? "reviews" : "review"}
         </>
       ) : (
         "New"
@@ -114,12 +125,26 @@ const Spot = () => {
         <div className="spot-detail-review-heading">{reviewsComponent}</div>
         <div className="post-review-div">
           {sessionUser && sessionUser.id !== ownerId && !loggedInUserReview && (
-            <button className="post-review-button">Post Your Review</button>
+            <>
+              <OpenModalButton
+                className="post-review-button"
+                buttonText="Post Your Review"
+                modalComponent={
+                  <ReviewFormModal spotId={spotId} refetchSpot={refetchSpot} />
+                }
+              />
+              {Reviews && !Reviews.length && (
+                <p>Be the first to post a review!</p>
+              )}
+            </>
           )}
         </div>
         <div>
           {!revIsLoading &&
-            Reviews.map((rev) => (
+            Reviews.sort(
+              (rev1, rev2) =>
+                new Date(rev1.createdAt) > new Date(rev2.createdAt)
+            ).map((rev) => (
               <div key={rev.id} className="spot-detail-review">
                 <div className="spot-detail-review-firstName">
                   {rev.User.firstName}
