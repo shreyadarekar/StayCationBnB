@@ -1,11 +1,12 @@
-.form-div {
+.signup-form {
   display: flex;
+  flex-direction: column;
+  gap: 10px;
   justify-content: center;
 }
 
-.form-input {
-  margin: 5px;
-  width: 300px;
+.signup-form-input {
+  width: 340px;
 }
 
 .button-div {
@@ -13,10 +14,20 @@
   justify-content: center;
 }
 
-.form-button {
+.signup-button {
   border-radius: 4px;
   font-size: 14px;
-  margin: 15px 5px;
-  width: 300px;
-  height: 30px;
+  width: 350px;
+  height: 40px;
+  background-color: tomato;
+  color: white;
+  cursor: pointer;
+}
+.signup-button:disabled {
+  background-color: #cccccc;
+  color: #666666;
+}
+
+.error {
+  color: red;
 }
