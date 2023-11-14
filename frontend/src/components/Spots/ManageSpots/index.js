@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useHistory } from "react-router-dom";
 import { getCurrentUserSpots } from "../../../store/spots";
 import "./Spots.css";
+import OpenModalButton from "../../OpenModalButton";
+import DeleteSpotModal from "../../DeleteSpotModal";
 
 const ManageSpots = () => {
   const history = useHistory();
@@ -29,12 +31,7 @@ const ManageSpots = () => {
 
       <div className="spots-grid">
         {spots.map((spot) => (
-          <NavLink
-            key={spot.id}
-            className="spot-div"
-            to={`/spots/${spot.id}/edit`}
-            title={spot.name}
-          >
+          <div key={spot.id} className="spot-div">
             <div className="spot-image-div">
               <img
                 className="spot-image"
@@ -61,9 +58,13 @@ const ManageSpots = () => {
               >
                 Update
               </button>
-              <button className="action-button">Delete</button>
+              <OpenModalButton
+                className="action-button"
+                buttonText="Delete"
+                modalComponent={<DeleteSpotModal spotId={spot.id} />}
+              />
             </div>
-          </NavLink>
+          </div>
         ))}
       </div>
     </div>
