@@ -1,0 +1,44 @@
+.spots-grid {
+  display: grid;
+  grid: 300px / repeat(auto-fill, 250px);
+  max-width: 1000px;
+  margin: 15px auto;
+}
+
+.spot-div {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-decoration: none;
+  color: black;
+  margin: 10px;
+}
+
+.spot-image-div {
+  display: flex;
+  align-items: center;
+  height: 200px;
+}
+.spot-image {
+  border: 1px solid black;
+  width: 100%;
+  height: 180px;
+}
+
+.spot-location-stars {
+  display: flex;
+  justify-content: space-between;
+}
+
+.update-delete-buttons {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.action-button {
+  color: white;
+  background-color: gray;
+  border: 2px solid black;
+  cursor: pointer;
+}
