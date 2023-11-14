@@ -90,4 +90,13 @@
   background-color: grey;
   font-size: 14px;
   border: 2px solid black;
+  cursor: pointer;
+}
+
+.delete-review-button {
+  color: white;
+  background-color: grey;
+  font-size: 14px;
+  border: 2px solid black;
+  cursor: pointer;
 }

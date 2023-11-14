@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import "./Spot.css";
 import OpenModalButton from "../../OpenModalButton";
 import ReviewFormModal from "../../ReviewFormModal";
+import DeleteReviewModal from "../../DeleteReviewModal";
 
 const Spot = () => {
   const { spotId } = useParams();
@@ -143,7 +144,7 @@ const Spot = () => {
           {!revIsLoading &&
             Reviews.sort(
               (rev1, rev2) =>
-                new Date(rev1.createdAt) > new Date(rev2.createdAt)
+                new Date(rev2.createdAt) - new Date(rev1.createdAt)
             ).map((rev) => (
               <div key={rev.id} className="spot-detail-review">
                 <div className="spot-detail-review-firstName">
@@ -157,6 +158,18 @@ const Spot = () => {
                   {new Date(rev.createdAt).getFullYear()}
                 </div>
                 <p>{rev.review}</p>
+                {sessionUser && rev.User.id === sessionUser.id && (
+                  <OpenModalButton
+                    className="delete-review-button"
+                    buttonText="Delete"
+                    modalComponent={
+                      <DeleteReviewModal
+                        reviewId={rev.id}
+                        refetchSpot={refetchSpot}
+                      />
+                    }
+                  />
+                )}
               </div>
             ))}
         </div>
