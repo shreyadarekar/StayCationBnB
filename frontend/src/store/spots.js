@@ -52,7 +52,7 @@ export const getSpot = (spotId) => async (dispatch) => {
   const response = await csrfFetch(`/api/spots/${spotId}`);
   const data = await response.json();
   dispatch(storeSpot(data));
-  return response;
+  return data;
 };
 
 export const getReviewsBySpotId = (spotId) => async (dispatch) => {
@@ -92,6 +92,24 @@ export const getCurrentUserSpots = () => async (dispatch) => {
   const response = await csrfFetch("/api/spots/current");
   const data = await response.json();
   dispatch(storeCurrentUserSpots(data.Spots));
+  return response;
+};
+
+export const updateSpot = (spotId, spot) => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots/${spotId}`, {
+    method: "PUT",
+    body: JSON.stringify(spot),
+  });
+  const data = await response.json();
+  dispatch(addSpot(data));
+  return data;
+};
+
+export const updateImageToSpot = (spotId, image) => async () => {
+  const response = await csrfFetch(`/api/spots/${spotId}/images`, {
+    method: "POST",
+    body: JSON.stringify(image),
+  });
   return response;
 };
 
