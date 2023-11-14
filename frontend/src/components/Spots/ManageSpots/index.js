@@ -7,7 +7,7 @@ import "./Spots.css";
 const ManageSpots = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const spotsObj = useSelector((state) => state.spots.currentSpots);
+  const spotsObj = useSelector((state) => state.spots.current);
   const spots = Object.values(spotsObj);
   const [isLoading, setIsLoading] = useState(true);
 

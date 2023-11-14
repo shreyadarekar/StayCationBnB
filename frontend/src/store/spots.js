@@ -3,7 +3,6 @@ import { csrfFetch } from "./csrf";
 const STORE_SPOTS = "spots/STORE_SPOTS";
 const STORE_SPOT = "spots/STORE_SPOT";
 const STORE_REVIEWS = "spots/STORE_REVIEWS";
-const ADD_SPOT = "spots/ADD_SPOT";
 const STORE_CURRENT_SPOTS = "spots/STORE_CURRENT_SPOTS";
 
 const storeSpots = (spots) => {
@@ -20,17 +19,11 @@ const storeSpot = (spot) => {
   };
 };
 
-const storeReviews = (reviews) => {
+const storeReviews = (spotId, reviews) => {
   return {
     type: STORE_REVIEWS,
+    spotId,
     reviews,
-  };
-};
-
-const addSpot = (spot) => {
-  return {
-    type: ADD_SPOT,
-    spot,
   };
 };
 
@@ -58,7 +51,7 @@ export const getSpot = (spotId) => async (dispatch) => {
 export const getReviewsBySpotId = (spotId) => async (dispatch) => {
   const response = await csrfFetch(`/api/spots/${spotId}/reviews`);
   const data = await response.json();
-  dispatch(storeReviews(data.Reviews));
+  dispatch(storeReviews(spotId, data.Reviews));
   return response;
 };
 
@@ -68,7 +61,7 @@ export const createSpot = (spot) => async (dispatch) => {
     body: JSON.stringify(spot),
   });
   const data = await response.json();
-  dispatch(addSpot(data));
+  dispatch(storeSpot(data));
   return data;
 };
 
@@ -101,7 +94,7 @@ export const updateSpot = (spotId, spot) => async (dispatch) => {
     body: JSON.stringify(spot),
   });
   const data = await response.json();
-  dispatch(addSpot(data));
+  dispatch(storeSpot(data));
   return data;
 };
 
@@ -113,36 +106,31 @@ export const updateImageToSpot = (spotId, image) => async () => {
   return response;
 };
 
-const initialState = {
-  data: {},
-  current: {},
-  currentSpots: {},
-  isLoading: false,
-};
+const initialState = { entries: {}, current: {} };
 const spotsReducer = (state = initialState, action) => {
   switch (action.type) {
     case STORE_SPOTS: {
       const spots = action.spots.reduce((acc, spot) => {
         return { ...acc, [spot.id]: spot };
       }, {});
-      return { ...state, data: spots };
-    }
-
-    case ADD_SPOT: {
-      return {
-        ...state,
-        data: { ...state.data, [action.spot.id]: action.spot },
-      };
+      return { ...state, entries: spots };
     }
 
     case STORE_SPOT: {
-      return { ...state, current: action.spot };
+      return {
+        ...state,
+        entries: { ...state.entries, [action.spot.id]: action.spot },
+      };
     }
 
     case STORE_REVIEWS: {
+      const exitingSpot = state.entries[action.spotId];
       return {
         ...state,
-        current: { ...state.current, Reviews: action.reviews },
+        entries: {
+          ...state.entries,
+          [action.spotId]: { ...exitingSpot, Reviews: action.reviews },
+        },
       };
     }
 
@@ -150,7 +138,7 @@ const spotsReducer = (state = initialState, action) => {
       const spots = action.spots.reduce((acc, spot) => {
         return { ...acc, [spot.id]: spot };
       }, {});
-      return { ...state, currentSpots: spots };
+      return { ...state, current: spots };
     }
 
     default:

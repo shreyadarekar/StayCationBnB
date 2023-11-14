@@ -6,7 +6,7 @@ import "./Spots.css";
 
 const Spots = () => {
   const dispatch = useDispatch();
-  const spotsObj = useSelector((state) => state.spots.data);
+  const spotsObj = useSelector((state) => state.spots.entries);
   const spots = Object.values(spotsObj);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -33,7 +33,8 @@ const Spots = () => {
               {spot.city}, {spot.state}
             </div>
             <div>
-              <i className="fa-solid fa-star"></i> <span style={{ fontWeight: "bold" }}>{spot.avgRating}</span>
+              <i className="fa-solid fa-star"></i>{" "}
+              <span style={{ fontWeight: "bold" }}>{spot.avgRating}</span>
             </div>
           </div>
           <div>

@@ -9,7 +9,7 @@ import ReviewFormModal from "../../ReviewFormModal";
 const Spot = () => {
   const { spotId } = useParams();
   const dispatch = useDispatch();
-  const spot = useSelector((state) => state.spots.current);
+  const spot = useSelector((state) => state.spots.entries[spotId]);
   const [isLoading, setIsLoading] = useState(true);
   const [revIsLoading, setRevIsLoading] = useState(true);
   const sessionUser = useSelector((state) => state.session.user);
