@@ -138,8 +138,11 @@ function SignupFormModal() {
               !lastName ||
               !email ||
               !username ||
+              username.length < 4 ||
               !password ||
-              !confirmPassword
+              password.length < 6 ||
+              !confirmPassword ||
+              confirmPassword.length < 6
             }
           >
             Sign Up

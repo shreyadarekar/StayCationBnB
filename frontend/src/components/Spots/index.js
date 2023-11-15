@@ -34,7 +34,9 @@ const Spots = () => {
             </div>
             <div>
               <i className="fa-solid fa-star"></i>{" "}
-              <span style={{ fontWeight: "bold" }}>{spot.avgRating}</span>
+              <span style={{ fontWeight: "bold" }}>
+                {spot.avgRating > 0 ? spot.avgRating.toFixed(1) : "New"}
+              </span>
             </div>
           </div>
           <div>

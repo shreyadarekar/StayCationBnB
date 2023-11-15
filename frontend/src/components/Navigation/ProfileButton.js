@@ -53,13 +53,15 @@ function ProfileButton({ user }) {
         {user ? (
           <>
             <div style={{ padding: "5px 10px" }}>
-              <div>Hello, {user.username}</div>
-              {/* <div>
-              {user.firstName} {user.lastName}
-            </div> */}
+              <div>Hello, {user.firstName}</div>
               <div>{user.email}</div>
             </div>
-            <NavLink className="manage-spot-link" exact to="/spots/current">
+            <NavLink
+              className="manage-spot-link"
+              exact
+              to="/spots/current"
+              onClick={closeMenu}
+            >
               Manage Spots
             </NavLink>
             <div className="logout-div">

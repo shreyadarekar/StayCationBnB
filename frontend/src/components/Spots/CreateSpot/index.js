@@ -57,7 +57,7 @@ const CreateSpot = () => {
     if (!previewImage)
       setErrors((errors) => ({
         ...errors,
-        previewImage: "PreviewImage is required",
+        previewImage: "Preview Image is required",
       }));
     else if (
       !previewImage.endsWith(".png") &&

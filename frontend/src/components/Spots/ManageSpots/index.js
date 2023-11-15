@@ -22,35 +22,44 @@ const ManageSpots = () => {
   return (
     <div>
       <h2 style={{ marginBottom: 0 }}>Manage Your Spots</h2>
-      <button
-        className="action-button"
-        onClick={() => history.push("/spots/new")}
-      >
-        Create a New Spot
-      </button>
+      {spots.length === 0 && (
+        <button
+          className="action-button"
+          onClick={() => history.push("/spots/new")}
+        >
+          Create a New Spot
+        </button>
+      )}
 
       <div className="spots-grid">
         {spots.map((spot) => (
-          <div key={spot.id} className="spot-div">
-            <div className="spot-image-div">
-              <img
-                className="spot-image"
-                src={spot.previewImage}
-                alt="preview"
-              />
-            </div>
-            <div className="spot-location-stars">
-              <div>
-                {spot.city}, {spot.state}
+          <div className="spot-div">
+            <NavLink
+              key={spot.id}
+              className="spot-div"
+              to={`/spots/${spot.id}`}
+              title={spot.name}
+            >
+              <div className="spot-image-div">
+                <img
+                  className="spot-image"
+                  src={spot.previewImage}
+                  alt="preview"
+                />
+              </div>
+              <div className="spot-location-stars">
+                <div>
+                  {spot.city}, {spot.state}
+                </div>
+                <div>
+                  <i className="fa-solid fa-star"></i>{" "}
+                  <span style={{ fontWeight: "bold" }}>{spot.avgRating}</span>
+                </div>
               </div>
               <div>
-                <i className="fa-solid fa-star"></i>{" "}
-                <span style={{ fontWeight: "bold" }}>{spot.avgRating}</span>
+                <span style={{ fontWeight: "bold" }}>${spot.price}</span> night
               </div>
-            </div>
-            <div>
-              <span style={{ fontWeight: "bold" }}>${spot.price}</span> night
-            </div>
+            </NavLink>
             <div className="update-delete-buttons">
               <button
                 className="action-button"

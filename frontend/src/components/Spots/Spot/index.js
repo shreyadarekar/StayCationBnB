@@ -56,17 +56,17 @@ const Spot = () => {
   const otherImages = SpotImages.filter((img) => img.preview !== true);
 
   const reviewsComponent = (
-    <>
+    <div>
       <i className="fa-solid fa-star"></i>{" "}
       {numReviews ? (
         <>
-          {avgStarRating} &nbsp;
-          {numReviews} {numReviews > 1 ? "reviews" : "review"}
+          {avgStarRating.toFixed(1)} . {numReviews}{" "}
+          {numReviews > 1 ? "reviews" : "review"}
         </>
       ) : (
         "New"
       )}
-    </>
+    </div>
   );
 
   return (

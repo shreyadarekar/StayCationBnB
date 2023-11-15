@@ -177,7 +177,7 @@ const UpdateSpot = () => {
 
   return (
     <form className="create-spot-form" onSubmit={handleSubmit}>
-      <h2>Create a new Spot</h2>
+      <h2>Update your Spot</h2>
 
       <div>
         <h3 className="section-h3">Where's your place located?</h3>
@@ -401,7 +401,7 @@ const UpdateSpot = () => {
 
       <div className="submit-button-div">
         <button className="submit-button" type="submit">
-          Update Spot
+          Update your Spot
         </button>
       </div>
     </form>
