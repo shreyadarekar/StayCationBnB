@@ -1,1 +1,7 @@
 /* TODO Add site wide styles */
+.modal-header {
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+}

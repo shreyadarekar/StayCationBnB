@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
+import { NavLink, useHistory } from "react-router-dom";
 import * as sessionActions from "../../store/session";
 import OpenModalMenuItem from "./OpenModalMenuItem";
 import LoginFormModal from "../LoginFormModal";
@@ -9,6 +10,7 @@ function ProfileButton({ user }) {
   const dispatch = useDispatch();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
+  const history = useHistory();
 
   const openMenu = () => {
     if (showMenu) return;
@@ -33,44 +35,56 @@ function ProfileButton({ user }) {
 
   const logout = (e) => {
     e.preventDefault();
-    dispatch(sessionActions.logout());
-    closeMenu();
+    dispatch(sessionActions.logout()).then(() => {
+      closeMenu();
+      history.push("/");
+    });
   };
 
-  const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
+  const dropdownClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
   return (
     <>
-      <button onClick={openMenu}>
-        <i className="fas fa-user-circle" />
+      <button className="menu-button" onClick={openMenu}>
+        <i className="fas fa-regular fa-bars fa-lg menu-button-icon" />
+        <i className="fas fa-user-circle fa-lg menu-button-icon" />
       </button>
-      <ul className={ulClassName} ref={ulRef}>
+      <div className={dropdownClassName} ref={ulRef}>
         {user ? (
           <>
-            <li>{user.username}</li>
-            <li>
-              {user.firstName} {user.lastName}
-            </li>
-            <li>{user.email}</li>
-            <li>
-              <button onClick={logout}>Log Out</button>
-            </li>
+            <div style={{ padding: "5px 10px" }}>
+              <div>Hello, {user.firstName}</div>
+              <div>{user.email}</div>
+            </div>
+            <NavLink
+              className="manage-spot-link"
+              exact
+              to="/spots/current"
+              onClick={closeMenu}
+            >
+              Manage Spots
+            </NavLink>
+            <div className="logout-div">
+              <button className="logout-button" onClick={logout}>
+                Log Out
+              </button>
+            </div>
           </>
         ) : (
-          <>
-            <OpenModalMenuItem
-              itemText="Log In"
-              onItemClick={closeMenu}
-              modalComponent={<LoginFormModal />}
-            />
+          <div className="profile-initial-dropdown">
             <OpenModalMenuItem
               itemText="Sign Up"
               onItemClick={closeMenu}
               modalComponent={<SignupFormModal />}
             />
-          </>
+            <OpenModalMenuItem
+              itemText="Log In"
+              onItemClick={closeMenu}
+              modalComponent={<LoginFormModal />}
+            />
+          </div>
         )}
-      </ul>
+      </div>
     </>
   );
 }

@@ -1,0 +1,33 @@
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+}
+
+.signup-form-input {
+  width: 340px;
+}
+
+.button-div {
+  display: flex;
+  justify-content: center;
+}
+
+.signup-button {
+  border-radius: 4px;
+  font-size: 14px;
+  width: 350px;
+  height: 40px;
+  background-color: tomato;
+  color: white;
+  cursor: pointer;
+}
+.signup-button:disabled {
+  background-color: #cccccc;
+  color: #666666;
+}
+
+.error {
+  color: red;
+}

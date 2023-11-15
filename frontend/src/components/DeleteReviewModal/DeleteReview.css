@@ -1,0 +1,24 @@
+.delete-review-div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+
+.delete-modal-action-button {
+  height: 40px;
+  font-size: 14px;
+  width: 100%;
+  color: white;
+  border: 2px solid black;
+  cursor: pointer;
+}
+
+.yes-button {
+  background-color: tomato;
+}
+
+.no-button {
+  background-color: gray;
+}
