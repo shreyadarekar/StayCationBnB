@@ -141,7 +141,7 @@ const Spot = () => {
           )}
         </div>
         <div>
-          {!revIsLoading &&
+          {Reviews &&
             Reviews.sort(
               (rev1, rev2) =>
                 new Date(rev2.createdAt) - new Date(rev1.createdAt)
