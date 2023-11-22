@@ -127,15 +127,20 @@ const spotsReducer = (state = initialState, action) => {
   switch (action.type) {
     case STORE_SPOTS: {
       const spots = action.spots.reduce((acc, spot) => {
-        return { ...acc, [spot.id]: spot };
+        const exitingSpot = state.entries[spot.id];
+        return { ...acc, [spot.id]: { ...exitingSpot, ...spot } };
       }, {});
       return { ...state, entries: spots };
     }
 
     case STORE_SPOT: {
+      const exitingSpot = state.entries[action.spot.id];
       return {
         ...state,
-        entries: { ...state.entries, [action.spot.id]: action.spot },
+        entries: {
+          ...state.entries,
+          [action.spot.id]: { ...exitingSpot, ...action.spot },
+        },
       };
     }
 

@@ -30,7 +30,7 @@ const Spot = () => {
     dispatch(getReviewsBySpotId(spotId)).then(() => setRevIsLoading(false));
   }, [dispatch, spotId]);
 
-  if (isLoading) return <h1>Loading...</h1>;
+  if (isLoading || revIsLoading) return <h1>Loading...</h1>;
 
   const {
     name,
@@ -82,7 +82,7 @@ const Spot = () => {
       <div className="spot-detail-images">
         <img
           className="spot-detail-preview-image"
-          src={previewImage.url}
+          src={previewImage ? previewImage.url : ""}
           alt="previewImage"
         />
         {otherImages.map((img) => (

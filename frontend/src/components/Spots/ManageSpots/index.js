@@ -33,9 +33,8 @@ const ManageSpots = () => {
 
       <div className="spots-grid">
         {spots.map((spot) => (
-          <div className="spot-div">
+          <div key={spot.id} className="spot-div">
             <NavLink
-              key={spot.id}
               className="spot-div"
               to={`/spots/${spot.id}`}
               title={spot.name}
