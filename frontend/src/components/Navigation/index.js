@@ -11,7 +11,7 @@ function Navigation({ isLoaded }) {
     <nav className="nav-header">
       <NavLink className="home-button" exact to="/">
         <i
-          class="fa-brands fa-airbnb fa-rotate-180 fa-lg"
+          className="fa-brands fa-airbnb fa-rotate-180 fa-lg"
           style={{ color: "#ff0000" }}
         ></i>{" "}
         StayCationBnB
