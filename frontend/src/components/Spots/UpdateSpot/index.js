@@ -158,16 +158,16 @@ const UpdateSpot = () => {
       setName(spot.name);
       setDescription(spot.description);
       setPrice(spot.price);
-      spot.SpotImages.forEach((img) => {
-        if (img.preview) {
-          setPreviewImage(img.url);
-        } else {
-          if (!image1) setImage1(img.url);
-          if (!image2) setImage2(img.url);
-          if (!image3) setImage3(img.url);
-          if (!image4) setImage4(img.url);
-        }
-      });
+      // spot.SpotImages.forEach((img) => {
+      //   if (img.preview) {
+      //     setPreviewImage(img.url);
+      //   } else {
+      //     if (!image1) setImage1(img.url);
+      //     if (!image2) setImage2(img.url);
+      //     if (!image3) setImage3(img.url);
+      //     if (!image4) setImage4(img.url);
+      //   }
+      // });
 
       setIsLoading(false);
     });
