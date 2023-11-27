@@ -6,13 +6,13 @@
 
 ## Table of Contents
 
-- [Link to Live Site](https://https://github.com/shreyadarekar/StayCationBnb#link-to-live-site)
-- [Description](https://https://github.com/shreyadarekar/StayCationBnb#description)
-- [Getting Started](https://https://github.com/shreyadarekar/StayCationBnb#getting-started)
-- [Technologies](https://https://github.com/shreyadarekar/StayCationBnb#technologies)
-- [Features](https://https://github.com/shreyadarekar/StayCationBnb#features)
-- [Wireframes](https://https://github.com/shreyadarekar/StayCationBnb#wireframes)
-- [Screenshots](https://https://github.com/shreyadarekar/StayCationBnb#screenshots)
+- [Link to Live Site](https://github.com/shreyadarekar/StayCationBnb#link-to-live-site)
+- [Description](https://github.com/shreyadarekar/StayCationBnb#description)
+- [Getting Started](https://github.com/shreyadarekar/StayCationBnb#getting-started)
+- [Technologies](https://github.com/shreyadarekar/StayCationBnb#technologies)
+- [Features](https://github.com/shreyadarekar/StayCationBnb#features)
+- [Wireframes](https://github.com/shreyadarekar/StayCationBnb#wireframes)
+- [Screenshots](https://github.com/shreyadarekar/StayCationBnb#screenshots)
 
 <br>
 
