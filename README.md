@@ -1,6 +1,6 @@
 ## AirBnB Clone
 
-# <img src="./favicon.ico" style="width:40px;" /> &nbsp; StayCationBnB
+# StayCationBnB
 
 <br>
 
